@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warning Videos — الإخوان المسلمون</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600;700&family=Amiri:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0a0a;
+  --parchment: #f5f0e8;
+  --sand: #e2d9c4;
+  --gold: #c8923a;
+  --gold-light: #e6b35a;
+  --deep-green: #0f2318;
+  --mid-green: #1e4230;
+  --fade: #7a6f62;
+  --crimson: #8b1a1a;
+  --crimson-light: #c0392b;
+  --surface: #ffffff;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:#0a0c0b;color:#f5f0e8;font-family:'Inter',sans-serif;line-height:1.7;overflow-x:hidden;}
+[dir="rtl"] body{font-family:'Amiri',serif;}
+
+/* ── LANG TOGGLE ── */
+.lang-toggle{
+  position:fixed;top:16px;right:16px;z-index:9000;
+  display:flex;align-items:center;
+  background:rgba(15,35,24,0.97);
+  border:1px solid rgba(200,146,58,0.3);
+  backdrop-filter:blur(12px);
+  overflow:hidden;
+}
+[dir="rtl"] .lang-toggle{right:auto;left:16px;}
+.lang-btn{padding:10px 18px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;border:none;background:transparent;color:rgba(247,243,236,0.45);cursor:pointer;transition:all 0.25s;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;}
+.lang-btn.active{background:var(--gold);color:var(--deep-green);font-weight:700;}
+.lang-btn:hover:not(.active){color:var(--gold);}
+.lang-div{width:1px;height:18px;background:rgba(200,146,58,0.2);}
+
+/* ── BACK BUTTON ── */
+.back-btn{
+  position:fixed;top:16px;left:16px;z-index:9000;
+  display:flex;align-items:center;gap:10px;
+  background:rgba(15,35,24,0.97);
+  border:1px solid rgba(200,146,58,0.3);
+  backdrop-filter:blur(12px);
+  padding:10px 20px;
+  color:var(--gold);
+  text-decoration:none;
+  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  transition:background 0.2s;
+  font-family:'JetBrains Mono',monospace;
+}
+[dir="rtl"] .back-btn{left:auto;right:16px;flex-direction:row-reverse;}
+.back-btn:hover{background:rgba(200,146,58,0.12);}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  min-height:60vh;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;
+  padding:120px 24px 80px;
+  overflow:hidden;
+  background:linear-gradient(180deg, #0d0505 0%, #1a0505 40%, #0a0c0b 100%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(192,57,43,0.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(192,57,43,0.05) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+.hero-glow{
+  position:absolute;
+  width:700px;height:400px;
+  border-radius:50%;
+  background:radial-gradient(ellipse, rgba(139,26,26,0.2) 0%, transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:glow-pulse 4s ease-in-out infinite;
+}
+@keyframes glow-pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+
+.hero-warning-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid rgba(192,57,43,0.4);
+  background:rgba(139,26,26,0.1);
+  padding:8px 20px;
+  margin-bottom:32px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--crimson-light);
+}
+.hero-warning-badge::before{content:'⚠';font-size:14px;}
+[dir="rtl"] .hero-warning-badge{letter-spacing:0;font-family:'Amiri',serif;font-size:14px;text-transform:none;}
+
+.hero h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(32px,6vw,72px);
+  font-weight:900;
+  color:#f5f0e8;
+  line-height:1.05;
+  margin-bottom:16px;
+  text-shadow:0 0 60px rgba(139,26,26,0.3);
+}
+[dir="rtl"] .hero h1{font-family:'Amiri',serif;}
+.hero-ar{
+  font-family:'Amiri',serif;
+  font-size:clamp(20px,3vw,36px);
+  color:rgba(192,57,43,0.7);
+  margin-bottom:24px;
+}
+.hero-desc{
+  font-size:15px;color:rgba(245,240,232,0.5);
+  max-width:600px;margin:0 auto;line-height:1.9;
+}
+[dir="rtl"] .hero-desc{font-family:'Amiri',serif;font-size:18px;}
+
+/* ── STATS ROW ── */
+.stats-row{
+  background:linear-gradient(135deg,var(--crimson) 0%,#6b1212 100%);
+  display:flex;justify-content:center;
+  gap:0;flex-wrap:wrap;
+}
+.stat-item{
+  padding:28px 48px;text-align:center;
+  border-right:1px solid rgba(255,255,255,0.1);
+}
+.stat-item:last-child{border-right:none;}
+.stat-n{font-family:'Playfair Display',serif;font-size:36px;font-weight:900;color:#fff;line-height:1;}
+.stat-l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:4px;font-family:'JetBrains Mono',monospace;}
+[dir="rtl"] .stat-l{letter-spacing:0;font-family:'Amiri',serif;font-size:13px;text-transform:none;}
+
+/* ── FILTER TABS ── */
+.filter-section{
+  max-width:1300px;margin:0 auto;
+  padding:60px 40px 0;
+}
+.filter-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--crimson-light);margin-bottom:16px;
+}
+[dir="rtl"] .filter-label{letter-spacing:0;font-family:'Amiri',serif;font-size:13px;text-transform:none;}
+.filter-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:48px;}
+.tab-btn{
+  padding:9px 22px;
+  border:1px solid rgba(192,57,43,0.25);
+  background:transparent;
+  color:rgba(245,240,232,0.45);
+  font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;transition:all 0.2s;
+  font-family:'Inter',sans-serif;
+}
+.tab-btn:hover,.tab-btn.active{
+  background:var(--crimson);
+  color:#fff;
+  border-color:var(--crimson);
+}
+[dir="rtl"] .tab-btn{font-family:'Amiri',serif;font-size:15px;letter-spacing:0;text-transform:none;}
+
+/* ── SECTION HEADING ── */
+.section-wrap{max-width:1300px;margin:0 auto;padding:0 40px 80px;}
+.section-eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--crimson-light);margin-bottom:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.section-eyebrow::after{content:'';flex:1;max-width:60px;height:1px;background:var(--crimson-light);opacity:0.4;}
+[dir="rtl"] .section-eyebrow{flex-direction:row-reverse;letter-spacing:0;font-family:'Amiri',serif;font-size:13px;text-transform:none;}
+[dir="rtl"] .section-eyebrow::after{display:none;}
+[dir="rtl"] .section-eyebrow::before{content:'';flex:1;max-width:60px;height:1px;background:var(--crimson-light);opacity:0.4;}
+.section-h{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(22px,3vw,38px);font-weight:700;
+  color:#f5f0e8;margin-bottom:12px;
+}
+[dir="rtl"] .section-h{font-family:'Amiri',serif;font-size:clamp(24px,3vw,42px);}
+.section-sub{font-size:14px;color:rgba(245,240,232,0.45);margin-bottom:40px;max-width:600px;}
+[dir="rtl"] .section-sub{font-family:'Amiri',serif;font-size:17px;}
+
+/* ── VIDEO GRID ── */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:2px;margin-bottom:64px;}
+
+.video-card{
+  background:#111614;
+  cursor:pointer;
+  transition:transform 0.3s,box-shadow 0.3s;
+  position:relative;
+  overflow:hidden;
+}
+.video-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(139,26,26,0.25);}
+.video-card.hidden{display:none;}
+
+/* Thumbnail */
+.thumb-wrap{
+  position:relative;
+  padding-top:56.25%;/* 16:9 */
+  background:#0d0d0d;
+  overflow:hidden;
+}
+.thumb-wrap iframe{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  border:none;
+}
+.thumb-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.7) 100%);
+  pointer-events:none;
+}
+.thumb-badge{
+  position:absolute;top:14px;left:14px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  padding:4px 10px;
+  z-index:2;
+}
+[dir="rtl"] .thumb-badge{left:auto;right:14px;letter-spacing:0;font-family:'Amiri',serif;font-size:12px;text-transform:none;}
+.badge-ar{background:rgba(200,146,58,0.9);color:#0f2318;}
+.badge-en{background:rgba(192,57,43,0.9);color:#fff;}
+.badge-doc{background:rgba(15,35,24,0.9);color:var(--gold);border:1px solid rgba(200,146,58,0.4);}
+.duration-badge{
+  position:absolute;bottom:14px;right:14px;
+  background:rgba(0,0,0,0.8);
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:#fff;
+  padding:3px 8px;z-index:2;
+}
+[dir="rtl"] .duration-badge{right:auto;left:14px;}
+
+/* Card body */
+.video-body{padding:24px;}
+.video-source{
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--crimson-light);margin-bottom:8px;
+}
+[dir="rtl"] .video-source{letter-spacing:0;font-family:'Amiri',serif;font-size:12px;text-transform:none;}
+.video-title{
+  font-family:'Playfair Display',serif;
+  font-size:16px;font-weight:700;
+  color:#f5f0e8;margin-bottom:10px;line-height:1.3;
+}
+[dir="rtl"] .video-title{font-family:'Amiri',serif;font-size:18px;line-height:1.6;}
+.video-desc{font-size:13px;color:rgba(245,240,232,0.45);line-height:1.75;margin-bottom:18px;}
+[dir="rtl"] .video-desc{font-family:'Amiri',serif;font-size:15px;line-height:2;}
+.video-meta{
+  display:flex;align-items:center;gap:12px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:rgba(245,240,232,0.3);
+  flex-wrap:wrap;
+}
+[dir="rtl"] .video-meta{font-family:'Amiri',serif;font-size:13px;flex-direction:row-reverse;}
+.video-meta-dot{color:rgba(192,57,43,0.5);}
+.watch-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:16px;
+  padding:10px 20px;
+  background:var(--crimson);
+  color:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;
+  transition:background 0.2s,transform 0.2s;
+  border:none;cursor:pointer;
+}
+.watch-btn:hover{background:#a93226;transform:translateY(-1px);}
+[dir="rtl"] .watch-btn{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;text-transform:none;flex-direction:row-reverse;}
+.watch-btn-icon{font-size:14px;}
+
+/* ── DISCLAIMER ── */
+.disclaimer{
+  max-width:1300px;margin:0 auto;
+  padding:0 40px 80px;
+}
+.disclaimer-box{
+  background:rgba(200,146,58,0.05);
+  border:1px solid rgba(200,146,58,0.2);
+  padding:32px 36px;
+  display:flex;gap:20px;align-items:flex-start;
+}
+[dir="rtl"] .disclaimer-box{flex-direction:row-reverse;}
+.disclaimer-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
+.disclaimer-text{font-size:13px;color:rgba(245,240,232,0.45);line-height:1.85;}
+[dir="rtl"] .disclaimer-text{font-family:'Amiri',serif;font-size:16px;line-height:2;}
+.disclaimer-text strong{color:var(--gold);font-weight:600;}
+
+/* ── FOOTER ── */
+footer{
+  background:#040a06;
+  padding:48px 40px;text-align:center;
+  border-top:1px solid rgba(200,146,58,0.08);
+}
+footer p{font-size:12px;color:rgba(245,240,232,0.18);letter-spacing:1px;}
+.footer-logo{font-family:'Amiri',serif;font-size:22px;color:var(--gold);margin-bottom:12px;}
+.back-home{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:20px;
+  color:var(--gold);
+  text-decoration:none;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  font-family:'JetBrains Mono',monospace;
+  transition:opacity 0.2s;
+}
+.back-home:hover{opacity:0.7;}
+[dir="rtl"] .back-home{letter-spacing:0;font-family:'Amiri',serif;font-size:14px;text-transform:none;flex-direction:row-reverse;}
+
+/* utils */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity 0.6s,transform 0.6s;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:768px){
+  .video-grid{grid-template-columns:1fr;}
+  .section-wrap,.filter-section,.disclaimer{padding-left:20px;padding-right:20px;}
+  .stat-item{padding:20px 24px;}
+  .lang-toggle{top:8px;right:8px;}
+  .back-btn{top:8px;left:8px;padding:8px 14px;font-size:10px;}
+}
+</style>
+</head>
+<body>
+
+<!-- BACK BUTTON -->
+<a href="index.html" class="back-btn">← <span data-en="Back to Archive" data-ar="العودة إلى الأرشيف">Back to Archive</span></a>
+
+<!-- LANG TOGGLE -->
+<div class="lang-toggle">
+  <button class="lang-btn active" id="btnEn" onclick="setLang('en')">🇬🇧 EN</button>
+  <div class="lang-div"></div>
+  <button class="lang-btn" id="btnAr" onclick="setLang('ar')">🇸🇦 AR</button>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-warning-badge" data-en="⚠ Warning Archive" data-ar="⚠ أرشيف التحذيرات">⚠ Warning Archive</div>
+  <h1 data-en="Warning Videos" data-ar="فيديوهات التحذير">Warning Videos</h1>
+  <div class="hero-ar">تحذيرات من الإخوان المسلمين</div>
+  <p class="hero-desc" data-en="A curated collection of documentaries, expert interviews, and investigative reports warning about the dangers and destabilizing effects of the Muslim Brotherhood across the Arab world and beyond." data-ar="مجموعة منتقاة من الوثائقيات ومقابلات الخبراء والتقارير الاستقصائية التي تحذر من مخاطر الإخوان المسلمين وآثارهم المزعزعة للاستقرار في العالم العربي وما وراءه.">A curated collection of documentaries, expert interviews, and investigative reports warning about the dangers and destabilizing effects of the Muslim Brotherhood across the Arab world and beyond.</p>
+</header>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-item"><div class="stat-n">12</div><div class="stat-l" data-en="Videos" data-ar="فيديو">Videos</div></div>
+  <div class="stat-item"><div class="stat-n">AR+EN</div><div class="stat-l" data-en="Languages" data-ar="اللغات">Languages</div></div>
+  <div class="stat-item"><div class="stat-n">6+</div><div class="stat-l" data-en="Countries Covered" data-ar="دولة مشمولة">Countries Covered</div></div>
+  <div class="stat-item"><div class="stat-n">Docs</div><div class="stat-l" data-en="& Investigations" data-ar="ووثائقيات">& Investigations</div></div>
+</div>
+
+<!-- FILTER -->
+<div class="filter-section">
+  <div class="filter-label" data-en="Filter by" data-ar="تصفية حسب">Filter by</div>
+  <div class="filter-tabs">
+    <button class="tab-btn active" data-filter="all" data-en="All Videos" data-ar="جميع الفيديوهات">All Videos</button>
+    <button class="tab-btn" data-filter="ar" data-en="Arabic" data-ar="عربي">Arabic</button>
+    <button class="tab-btn" data-filter="en" data-en="English" data-ar="إنجليزي">English</button>
+    <button class="tab-btn" data-filter="doc" data-en="Documentaries" data-ar="وثائقيات">Documentaries</button>
+    <button class="tab-btn" data-filter="interview" data-en="Interviews" data-ar="مقابلات">Interviews</button>
+  </div>
+</div>
+
+<!-- ARABIC VIDEOS -->
+<div class="section-wrap">
+  <div class="section-eyebrow fade-up" data-en="Arabic Content" data-ar="المحتوى العربي">Arabic Content</div>
+  <h2 class="section-h fade-up" data-en="Arabic Warning Videos" data-ar="فيديوهات التحذير باللغة العربية">Arabic Warning Videos</h2>
+  <p class="section-sub fade-up" data-en="Documentaries and investigations from Arab media outlets exposing Brotherhood activities." data-ar="وثائقيات وتحقيقات من منابر إعلامية عربية تكشف أنشطة الجماعة.">Documentaries and investigations from Arab media outlets exposing Brotherhood activities.</p>
+
+  <div class="video-grid">
+
+    <!-- VIDEO AR 1 -->
+    <div class="video-card fade-up" data-lang="ar" data-type="doc">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/whykaxVJH10" title="الجذور الخفية للإرهاب" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-ar" data-en="Arabic" data-ar="عربي">Arabic</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="Arabic Investigative Report" data-ar="تقرير استقصائي عربي">Arabic Investigative Report</div>
+        <div class="video-title" data-en="The Hidden Roots of Terrorism — How Brotherhood Ideology Shaped Extremist Groups" data-ar="الجذور الخفية للإرهاب — كيف أثّر فكر الإخوان في التنظيمات المتطرفة">الجذور الخفية للإرهاب — كيف أثّر فكر الإخوان في التنظيمات المتطرفة</div>
+        <p class="video-desc" data-en="Arab media investigation examining how the Brotherhood's ideology provided the intellectual foundation for extremist groups including al-Qaeda and ISIS." data-ar="تحقيق إعلامي عربي يرصد كيف وفّرت أيديولوجية الجماعة الأساسَ الفكري لتنظيمات متطرفة من بينها القاعدة وداعش.">تحقيق إعلامي عربي يرصد كيف وفّرت أيديولوجية الجماعة الأساسَ الفكري لتنظيمات متطرفة من بينها القاعدة وداعش.</p>
+        <div class="video-meta">
+          <span data-en="Arabic" data-ar="عربي">Arabic</span>
+          <span class="video-meta-dot">◆</span>
+          <span data-en="Investigative Report" data-ar="تقرير استقصائي">Investigative Report</span>
+          <span class="video-meta-dot">◆</span>
+          <span>2026</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=whykaxVJH10" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">Watch on YouTube</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIDEO AR 2 -->
+    <div class="video-card fade-up" data-lang="ar" data-type="doc">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/MBmSgrePSUA" title="جرائم الإخوان" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-ar" data-en="Arabic" data-ar="عربي">Arabic</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="Egyptian Media" data-ar="إعلام مصري">إعلام مصري</div>
+        <div class="video-title" data-en="Brotherhood Crimes — 30 June Documentation" data-ar="جرائم الإخوان — توثيق 30 يونيو">جرائم الإخوان — توثيق أحداث 30 يونيو</div>
+        <p class="video-desc" data-en="Egyptian documentary exposing Brotherhood crimes against Egyptian citizens during the post-Morsi period, including violence against civilians and state institutions." data-ar="وثائقي مصري يكشف جرائم الجماعة ضد المواطنين المصريين خلال مرحلة ما بعد مرسي، بما يشمل العنف ضد المدنيين ومؤسسات الدولة.">وثائقي مصري يكشف جرائم الجماعة ضد المواطنين المصريين خلال مرحلة ما بعد مرسي، بما يشمل العنف ضد المدنيين ومؤسسات الدولة.</p>
+        <div class="video-meta">
+          <span data-en="Arabic" data-ar="عربي">Arabic</span>
+          <span class="video-meta-dot">◆</span>
+          <span data-en="Documentary" data-ar="وثائقي">وثائقي</span>
+          <span class="video-meta-dot">◆</span>
+          <span>مصر</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=MBmSgrePSUA" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">شاهد على يوتيوب</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIDEO AR 3 -->
+    <div class="video-card fade-up" data-lang="ar" data-type="doc">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/NU1r0uYOwew" title="إرهاب الإخوان" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-ar" data-en="Arabic" data-ar="عربي">Arabic</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="Arab Investigative Media" data-ar="إعلام استقصائي عربي">إعلام استقصائي عربي</div>
+        <div class="video-title" data-en="Brotherhood Terrorism — Brothers of Blood" data-ar="إرهاب الإخوان — إخوان الدم">إرهاب الإخوان المسلمين — إخوان الدم</div>
+        <p class="video-desc" data-en="A detailed investigation exposing the Brotherhood's pattern of lies, fabrications, and violence — including documentation of media manipulation through Al Jazeera." data-ar="تحقيق مفصّل يكشف نهج الجماعة في الكذب والتلفيق والعنف، ويوثّق التلاعب الإعلامي عبر قناة الجزيرة.">تحقيق مفصّل يكشف نهج الجماعة في الكذب والتلفيق والعنف، ويوثّق التلاعب الإعلامي عبر قناة الجزيرة.</p>
+        <div class="video-meta">
+          <span data-en="Arabic" data-ar="عربي">Arabic</span>
+          <span class="video-meta-dot">◆</span>
+          <span data-en="Investigation" data-ar="تحقيق">تحقيق</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=NU1r0uYOwew" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">شاهد على يوتيوب</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIDEO AR 4 -->
+    <div class="video-card fade-up" data-lang="ar" data-type="doc">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/hL4iW3GRD44" title="التحذير من الإخوان" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-ar" data-en="Arabic" data-ar="عربي">Arabic</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="Mosque of Quba — Sheikh al-Maghamisi" data-ar="مسجد قباء — الشيخ المغامسي">مسجد قباء — الشيخ عبدالرحمن المغامسي</div>
+        <div class="video-title" data-en="Friday Sermon: Warning Against the Muslim Brotherhood" data-ar="خطبة الجمعة: التحذير من جماعة الإخوان المسلمين">خطبة الجمعة: التحذير من جماعة الإخوان المسلمين</div>
+        <p class="video-desc" data-en="An Islamic scholarly warning from Sheikh al-Maghamisi at the Mosque of Quba, delivering a religious and historical critique of the Brotherhood's methodology and dangers." data-ar="تحذير علمي إسلامي من الشيخ عبدالرحمن المغامسي في مسجد قباء، يقدّم نقداً دينياً وتاريخياً لمنهج الجماعة ومخاطرها.">تحذير علمي إسلامي من الشيخ عبدالرحمن المغامسي في مسجد قباء، يقدّم نقداً دينياً وتاريخياً لمنهج الجماعة ومخاطرها.</p>
+        <div class="video-meta">
+          <span data-en="Arabic" data-ar="عربي">Arabic</span>
+          <span class="video-meta-dot">◆</span>
+          <span data-en="Religious Scholar" data-ar="عالم ديني">عالم ديني</span>
+          <span class="video-meta-dot">◆</span>
+          <span data-en="Saudi Arabia" data-ar="السعودية">السعودية</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=hL4iW3GRD44" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">شاهد على يوتيوب</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIDEO AR 5 -->
+    <div class="video-card fade-up" data-lang="ar" data-type="doc">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/dXc8dZQAx6E" title="جرائم الإخوان في مصر" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-ar" data-en="Arabic" data-ar="عربي">Arabic</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="Egyptian Documentation" data-ar="توثيق مصري">توثيق مصري</div>
+        <div class="video-title" data-en="The Worst Brotherhood Crimes in Egypt" data-ar="أفظع جرائم الإخوان في مصر">أفظع جرائم الإخوان في مصر</div>
+        <p class="video-desc" data-en="A documentary compilation of footage showing Brotherhood members engaging in violence against Egyptian citizens during the 2013 political crisis." data-ar="تجميع وثائقي لمقاطع تُظهر عناصر الجماعة يمارسون العنف ضد المواطنين المصريين خلال الأزمة السياسية عام 2013.">تجميع وثائقي لمقاطع تُظهر عناصر الجماعة يمارسون العنف ضد المواطنين المصريين خلال الأزمة السياسية عام 2013.</p>
+        <div class="video-meta">
+          <span data-en="Arabic" data-ar="عربي">Arabic</span>
+          <span class="video-meta-dot">◆</span>
+          <span data-en="Documentary Evidence" data-ar="توثيق وثائقي">توثيق وثائقي</span>
+          <span class="video-meta-dot">◆</span>
+          <span>2013</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=dXc8dZQAx6E" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">شاهد على يوتيوب</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ENGLISH SECTION -->
+  <div class="section-eyebrow fade-up" data-en="English Content" data-ar="المحتوى الإنجليزي">English Content</div>
+  <h2 class="section-h fade-up" data-en="English Warning Documentaries & Reports" data-ar="وثائقيات وتقارير تحذيرية باللغة الإنجليزية">English Warning Documentaries &amp; Reports</h2>
+  <p class="section-sub fade-up" data-en="Western investigative journalism and expert analysis exposing Brotherhood influence and methods." data-ar="صحافة استقصائية غربية وتحليل خبراء يكشفان نفوذ الجماعة وأساليبها.">Western investigative journalism and expert analysis exposing Brotherhood influence and methods.</p>
+
+  <div class="video-grid">
+
+    <!-- VIDEO EN 1 -->
+    <div class="video-card fade-up" data-lang="en" data-type="doc">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/H0tvBerE5ZY" title="Hidden Face of the Brotherhood" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-en" data-en="English" data-ar="إنجليزي">English</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="Documentary Investigation" data-ar="تحقيق وثائقي">Documentary Investigation</div>
+        <div class="video-title" data-en="The Hidden Face of the Muslim Brotherhood — UNCENSORED" data-ar="الوجه الخفي للإخوان المسلمين — بدون رقابة">The Hidden Face of the Muslim Brotherhood — UNCENSORED</div>
+        <p class="video-desc" data-en="A year after Mubarak's fall, Egypt is in turmoil as the Brotherhood comes to power. This investigation explores what lies behind the public face of the movement, from Tahrir Square to Cairo's corridors of power." data-ar="بعد عام من سقوط مبارك، تعصف الفوضى بمصر مع صعود الإخوان. يستكشف هذا التحقيق ما يختبئ خلف الوجه العلني للحركة، من ميدان التحرير إلى أروقة السلطة في القاهرة.">A year after Mubarak's fall, this investigation explores what lies behind the public face of the Brotherhood — from Tahrir Square to Cairo's corridors of power.</p>
+        <div class="video-meta">
+          <span>English</span>
+          <span class="video-meta-dot">◆</span>
+          <span>Documentary</span>
+          <span class="video-meta-dot">◆</span>
+          <span>Egypt</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=H0tvBerE5ZY" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">Watch on YouTube</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIDEO EN 2 -->
+    <div class="video-card fade-up" data-lang="en" data-type="interview">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/WxLtOE_TXFg" title="Muslim Expert Warning" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-en" data-en="English" data-ar="إنجليزي">English</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="Expert Interview" data-ar="مقابلة خبير">Expert Interview</div>
+        <div class="video-title" data-en="Islamists, the Muslim Brotherhood &amp; Britain's Future — Muslim Expert's Warning" data-ar="الإسلاميون والإخوان ومستقبل بريطانيا — تحذير خبير مسلم">Islamists, the Muslim Brotherhood &amp; Britain's Future — Muslim Expert's Warning</div>
+        <p class="video-desc" data-en="A Muslim expert warns about the Brotherhood's growing influence in Britain, its methods of infiltrating institutions, and the threat to national cohesion." data-ar="يحذّر خبير مسلم من تنامي نفوذ الجماعة في بريطانيا وأساليبها في التغلغل داخل المؤسسات والتهديد الذي تمثّله للتماسك الوطني.">A Muslim expert warns about the Brotherhood's growing influence in Britain, its methods of infiltrating institutions, and the threat to national cohesion.</p>
+        <div class="video-meta">
+          <span>English</span>
+          <span class="video-meta-dot">◆</span>
+          <span>Expert Interview</span>
+          <span class="video-meta-dot">◆</span>
+          <span>UK</span>
+          <span class="video-meta-dot">◆</span>
+          <span>2025</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=WxLtOE_TXFg" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">Watch on YouTube</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIDEO EN 3 -->
+    <div class="video-card fade-up" data-lang="en" data-type="interview">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/qKAT8jUwlUE" title="Brotherhood Threat to North America" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-en" data-en="English" data-ar="إنجليزي">English</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="Think Twice — Investigative Report" data-ar="Think Twice — تقرير استقصائي">Think Twice — Investigative Report</div>
+        <div class="video-title" data-en="The Muslim Brotherhood's Threat to North America" data-ar="تهديد الإخوان المسلمين لأمريكا الشمالية">The Muslim Brotherhood's Threat to North America</div>
+        <p class="video-desc" data-en="An investigation into how foreign funders and Brotherhood-linked organizations have been quietly infiltrating North America, exploiting freedoms and legal frameworks to advance their agenda." data-ar="تحقيق في كيفية تغلغل الممولين الأجانب والمنظمات المرتبطة بالإخوان بصمت في أمريكا الشمالية، مستغلّين الحريات والأطر القانونية لتحقيق أجندتهم.">An investigation into how Brotherhood-linked organizations have been quietly infiltrating North America, exploiting freedoms to advance their agenda.</p>
+        <div class="video-meta">
+          <span>English</span>
+          <span class="video-meta-dot">◆</span>
+          <span>Investigation</span>
+          <span class="video-meta-dot">◆</span>
+          <span>North America</span>
+          <span class="video-meta-dot">◆</span>
+          <span>2025</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=qKAT8jUwlUE" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">Watch on YouTube</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIDEO EN 4 -->
+    <div class="video-card fade-up" data-lang="en" data-type="doc">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/DDm0oGTXwXU" title="Brotherhood UK Invasion" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-en" data-en="English" data-ar="إنجليزي">English</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="UAE Warning — UK Investigation" data-ar="تحذير إماراتي — تحقيق بريطاني">UAE Warning — UK Investigation</div>
+        <div class="video-title" data-en="The Brotherhood 'Invasion' the UK Refuses to See — A Warning from the UAE" data-ar="الغزو الإخواني الذي ترفض بريطانيا رؤيته — تحذير من الإمارات">The Brotherhood "Invasion" the UK Refuses to See — A Warning from the UAE</div>
+        <p class="video-desc" data-en="Britain has been infiltrated. The Brotherhood's quiet takeover is already underway — and the West is listening to the wrong Muslims. A powerful warning backed by UAE intelligence perspective." data-ar="تغلغلت الجماعة في بريطانيا. الاستيلاء الصامت جارٍ بالفعل — والغرب يُصغي إلى المسلمين الخطأ. تحذير قوي مدعوم بمنظور استخباراتي إماراتي.">Britain has been infiltrated. The Brotherhood's quiet takeover is underway and the West is listening to the wrong Muslims — a powerful warning backed by UAE intelligence perspective.</p>
+        <div class="video-meta">
+          <span>English</span>
+          <span class="video-meta-dot">◆</span>
+          <span>Documentary</span>
+          <span class="video-meta-dot">◆</span>
+          <span>UK / UAE</span>
+          <span class="video-meta-dot">◆</span>
+          <span>2025</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=DDm0oGTXwXU" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">Watch on YouTube</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- VIDEO EN 5 -->
+    <div class="video-card fade-up" data-lang="en" data-type="doc">
+      <div class="thumb-wrap">
+        <iframe src="https://www.youtube.com/embed/SYT1uYITabo" title="Undercover Brotherhood" allowfullscreen loading="lazy"></iframe>
+        <div class="thumb-overlay"></div>
+        <div class="thumb-badge badge-doc" data-en="Undercover" data-ar="تحقيق سري">Undercover</div>
+      </div>
+      <div class="video-body">
+        <div class="video-source" data-en="Undercover Journalism" data-ar="صحافة سرية">Undercover Journalism</div>
+        <div class="video-title" data-en="I Go Undercover Inside the Muslim Brotherhood" data-ar="أتسلل سراً إلى داخل الإخوان المسلمين">I Go Undercover Inside the Muslim Brotherhood</div>
+        <p class="video-desc" data-en="Following Trump's designation of the Brotherhood as a terrorist organization, a journalist goes undercover to expose why — revealing inner workings, recruitment methods, and the gap between public messaging and private ideology." data-ar="في أعقاب تصنيف ترامب للجماعة منظمةً إرهابية، يتسلل صحفي إلى داخلها ليكشف الأسباب — مسلّطاً الضوء على آلياتها الداخلية وأساليب التجنيد والهوّة بين خطابها العلني وأيديولوجيتها السرية.">Following Trump's designation of the Brotherhood as a terrorist organization, a journalist goes undercover to expose inner workings, recruitment methods, and the gap between public messaging and private ideology.</p>
+        <div class="video-meta">
+          <span>English</span>
+          <span class="video-meta-dot">◆</span>
+          <span>Undercover</span>
+          <span class="video-meta-dot">◆</span>
+          <span>2025</span>
+        </div>
+        <a class="watch-btn" href="https://www.youtube.com/watch?v=SYT1uYITabo" target="_blank">
+          <span class="watch-btn-icon">▶</span>
+          <span data-en="Watch on YouTube" data-ar="شاهد على يوتيوب">Watch on YouTube</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer">
+  <div class="disclaimer-box fade-up">
+    <div class="disclaimer-icon">📋</div>
+    <div class="disclaimer-text">
+      <strong data-en="Editorial Note" data-ar="ملاحظة تحريرية">Editorial Note</strong><br>
+      <span data-en="Videos on this page represent the perspectives of scholars, journalists, and analysts who have critiqued the Muslim Brotherhood. They are presented for educational and research purposes as part of a balanced historical archive. The archive does not endorse any single political position." data-ar="تمثّل الفيديوهات في هذه الصفحة وجهات نظر علماء وصحفيين ومحللين انتقدوا جماعة الإخوان المسلمين. وتُعرض لأغراض تعليمية وبحثية في إطار أرشيف تاريخي متوازن. لا يتبنّى الأرشيف أي موقف سياسي بعينه.">Videos on this page represent the perspectives of scholars, journalists, and analysts who have critiqued the Muslim Brotherhood. They are presented for educational and research purposes as part of a balanced historical archive. The archive does not endorse any single political position.</span>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">الإخوان المسلمون — Archive</div>
+  <p data-en="Warning Videos Section — For educational purposes only." data-ar="قسم فيديوهات التحذير — لأغراض تعليمية فقط.">Warning Videos Section — For educational purposes only.</p>
+  <a href="index.html" class="back-home">← <span data-en="Return to Main Archive" data-ar="العودة إلى الأرشيف الرئيسي">Return to Main Archive</span></a>
+</footer>
+
+<script>
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  const isAr = lang === 'ar';
+  const root = document.getElementById('htmlRoot');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', isAr ? 'rtl' : 'ltr');
+  document.getElementById('btnEn').classList.toggle('active', !isAr);
+  document.getElementById('btnAr').classList.toggle('active', isAr);
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + lang);
+  });
+  document.body.style.fontFamily = isAr ? "'Amiri', serif" : "'Inter', sans-serif";
+}
+
+// Filter tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filter = btn.dataset.filter;
+    document.querySelectorAll('.video-card').forEach(card => {
+      if (filter === 'all') {
+        card.classList.remove('hidden');
+      } else if (filter === 'ar' || filter === 'en') {
+        card.classList.toggle('hidden', card.dataset.lang !== filter);
+      } else {
+        card.classList.toggle('hidden', card.dataset.type !== filter);
+      }
+    });
+  });
+});
+
+// Scroll animations
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
