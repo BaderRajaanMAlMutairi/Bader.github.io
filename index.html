@@ -1,1394 +1,1276 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr" id="htmlRoot">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eng. Bader Website - Fitness Calculator</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            background-attachment: fixed;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-            flex: 1;
-            animation: slideUp 0.8s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px 20px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-            animation: fadeInDown 0.8s ease-out 0.2s both;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.95;
-            animation: fadeInUp 0.8s ease-out 0.4s both;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .tabs {
-            display: flex;
-            background: #f8f9fa;
-            border-bottom: 2px solid #e0e0e0;
-            animation: fadeIn 0.8s ease-out 0.6s both;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .tab-button {
-            flex: 1;
-            padding: 20px;
-            border: none;
-            background: transparent;
-            font-size: 1.1em;
-            cursor: pointer;
-            font-weight: 600;
-            color: #666;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-        }
-
-        .tab-button:hover {
-            background: #efefef;
-            transform: translateY(-2px);
-        }
-
-        .tab-button.active {
-            color: #667eea;
-        }
-
-        .tab-button.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: #667eea;
-            animation: expandWidth 0.4s ease-out;
-        }
-
-        @keyframes expandWidth {
-            from {
-                left: 50%;
-                right: 50%;
-            }
-            to {
-                left: 0;
-                right: 0;
-            }
-        }
-
-        .content {
-            padding: 40px;
-            animation: fadeIn 0.8s ease-out 0.8s both;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeInScale 0.6s ease-out;
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-            animation: fadeInLeft 0.6s ease-out both;
-        }
-
-        .form-group:nth-child(1) { animation-delay: 0.1s; }
-        .form-group:nth-child(2) { animation-delay: 0.15s; }
-        .form-group:nth-child(3) { animation-delay: 0.2s; }
-        .form-group:nth-child(4) { animation-delay: 0.25s; }
-
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-            font-size: 1.05em;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1em;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .radio-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .radio-option:hover {
-            transform: translateX(5px);
-        }
-
-        .radio-option input[type="radio"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            accent-color: #667eea;
-            transition: all 0.3s ease;
-        }
-
-        .radio-option label {
-            margin: 0;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        button[type="submit"] {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            animation: fadeInUp 0.6s ease-out 0.8s both;
-        }
-
-        button[type="submit"]::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        button[type="submit"]:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        button[type="submit"]:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        button[type="submit"]:active {
-            transform: translateY(-1px);
-        }
-
-        .results {
-            display: none;
-            margin-top: 40px;
-        }
-
-        .results.show {
-            display: block;
-            animation: slideInUp 0.8s ease-out;
-        }
-
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .results h3 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 1.4em;
-            animation: fadeInDown 0.6s ease-out;
-        }
-
-        .result-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .result-card {
-            background: linear-gradient(135deg, #f0f4ff 0%, #f5f0ff 100%);
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #667eea;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: zoomIn 0.6s ease-out both;
-        }
-
-        .result-card:nth-child(1) { animation-delay: 0.1s; }
-        .result-card:nth-child(2) { animation-delay: 0.2s; }
-        .result-card:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes zoomIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .result-card:hover {
-            transform: translateY(-10px) scale(1.05);
-            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.3);
-        }
-
-        .result-card h4 {
-            color: #666;
-            font-size: 0.95em;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .result-card .value {
-            font-size: 2em;
-            font-weight: 700;
-            color: #667eea;
-            transition: all 0.3s ease;
-        }
-
-        .result-card:hover .value {
-            transform: scale(1.2);
-        }
-
-        .result-card .unit {
-            font-size: 0.85em;
-            color: #999;
-            margin-top: 5px;
-        }
-
-        .info-text {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-            font-size: 0.95em;
-            color: #333;
-            line-height: 1.6;
-            animation: slideInRight 0.6s ease-out;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .activity-section {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin: 20px 0;
-            animation: fadeInUp 0.6s ease-out;
-        }
-
-        .meals-section {
-            background: #f0f4ff;
-            padding: 25px;
-            border-radius: 10px;
-            margin-top: 30px;
-            border-left: 5px solid #667eea;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .meals-section h3 {
-            color: #667eea;
-            margin-bottom: 20px;
-        }
-
-        .meal-card {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: slideInLeft 0.6s ease-out both;
-        }
-
-        .meal-card:nth-child(1) { animation-delay: 0.1s; }
-        .meal-card:nth-child(2) { animation-delay: 0.2s; }
-        .meal-card:nth-child(3) { animation-delay: 0.3s; }
-        .meal-card:nth-child(4) { animation-delay: 0.4s; }
-
-        .meal-card:hover {
-            transform: translateX(10px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
-        }
-
-        .meal-card h4 {
-            color: #764ba2;
-            margin-bottom: 10px;
-        }
-
-        .meal-card p {
-            color: #555;
-            line-height: 1.6;
-        }
-
-        .workout-section {
-            background: #f0f4ff;
-            padding: 25px;
-            border-radius: 10px;
-            margin-top: 30px;
-            border-left: 5px solid #667eea;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .workout-section h3 {
-            color: #667eea;
-            margin-bottom: 20px;
-        }
-
-        .schedule-selector {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .schedule-btn {
-            padding: 10px 20px;
-            border: 2px solid #667eea;
-            background: white;
-            color: #667eea;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .schedule-btn.active {
-            background: #667eea;
-            color: white;
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .schedule-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
-        }
-
-        .schedule-content {
-            display: none;
-        }
-
-        .schedule-content.active {
-            display: block;
-            animation: fadeInScale 0.6s ease-out;
-        }
-
-        .schedule-title {
-            color: #667eea;
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            margin-top: 20px;
-            animation: fadeInLeft 0.6s ease-out;
-        }
-
-        .workout-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .exercise-card {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: popIn 0.6s ease-out both;
-        }
-
-        .exercise-card:nth-child(1) { animation-delay: 0.1s; }
-        .exercise-card:nth-child(2) { animation-delay: 0.2s; }
-        .exercise-card:nth-child(3) { animation-delay: 0.3s; }
-        .exercise-card:nth-child(4) { animation-delay: 0.4s; }
-        .exercise-card:nth-child(5) { animation-delay: 0.5s; }
-        .exercise-card:nth-child(6) { animation-delay: 0.6s; }
-
-        @keyframes popIn {
-            from {
-                opacity: 0;
-                transform: scale(0.7) rotateY(-10deg);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) rotateY(0);
-            }
-        }
-
-        .exercise-card:hover {
-            transform: translateY(-15px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
-        }
-
-        .exercise-header {
-            height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.1em;
-            font-weight: 600;
-            text-align: center;
-            padding: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .exercise-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: left 0.6s;
-        }
-
-        .exercise-card:hover .exercise-header::before {
-            left: 100%;
-        }
-
-        .exercise-info {
-            padding: 15px;
-        }
-
-        .exercise-info h4 {
-            color: #667eea;
-            margin-bottom: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .exercise-card:hover .exercise-info h4 {
-            transform: translateX(5px);
-        }
-
-        .exercise-info p {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .youtube-btn {
-            display: inline-block;
-            background: #ff0000;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.85em;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .youtube-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            transition: left 0.3s;
-        }
-
-        .youtube-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
-        }
-
-        .youtube-btn:hover::before {
-            left: 100%;
-        }
-
-        .footer {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            padding: 30px 20px;
-            margin-top: 40px;
-            border-radius: 20px;
-            animation: slideUp 0.8s ease-out;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .footer::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shimmer 4s infinite;
-        }
-
-        .footer h3 {
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            position: relative;
-            z-index: 1;
-            animation: fadeInDown 0.8s ease-out;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 1;
-        }
-
-        .social-link {
-            color: white;
-            text-decoration: none;
-            font-size: 1.1em;
-            font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            animation: fadeInUp 0.8s ease-out both;
-        }
-
-        .social-link:nth-child(1) { animation-delay: 0.2s; }
-
-        .social-link:hover {
-            transform: translateY(-5px) scale(1.1);
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
-        }
-
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-            .result-grid {
-                grid-template-columns: 1fr;
-            }
-            .workout-grid {
-                grid-template-columns: 1fr;
-            }
-            .social-links {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .schedule-selector {
-                flex-direction: column;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الإخوان المسلمون — Classified Archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;500;600;700&family=Amiri:wght@400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0a0a0a;
+  --parchment: #f5f0e8;
+  --sand: #e2d9c4;
+  --gold: #c8923a;
+  --gold-light: #e6b35a;
+  --gold-dim: rgba(200,146,58,0.15);
+  --deep-green: #0f2318;
+  --mid-green: #1e4230;
+  --bright-green: #2d6648;
+  --fade: #7a6f62;
+  --rule: rgba(200,146,58,0.25);
+  --crimson: #8b1a1a;
+  --crimson-light: #c0392b;
+  --surface: #ffffff;
+  --surface2: #f9f6f0;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{background:var(--parchment);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.7;overflow-x:hidden;}
+[dir="rtl"] body{font-family:'Amiri',serif;}
+
+/* ═══════════════════════════════════════
+   LOGIN SCREEN
+═══════════════════════════════════════ */
+#loginScreen {
+  position:fixed;inset:0;z-index:10000;
+  background:var(--deep-green);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.login-bg-pattern {
+  position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(200,146,58,0.04) 60px),
+    repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(200,146,58,0.04) 60px);
+  background-size:60px 60px;
+}
+.login-glow {
+  position:absolute;
+  width:600px;height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(200,146,58,0.12) 0%, transparent 70%);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  animation:pulse-glow 4s ease-in-out infinite;
+}
+.login-glow2 {
+  position:absolute;
+  width:300px;height:300px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(45,102,72,0.3) 0%, transparent 70%);
+  top:20%;right:10%;
+  animation:pulse-glow 6s ease-in-out infinite reverse;
+}
+@keyframes pulse-glow{0%,100%{opacity:0.6;transform:translate(-50%,-50%) scale(1);}50%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}}
+
+.login-card {
+  position:relative;z-index:2;
+  width:100%;max-width:460px;
+  padding:0 24px;
+}
+.login-brand {
+  text-align:center;
+  margin-bottom:48px;
+}
+.login-emblem {
+  width:72px;height:72px;
+  border:2px solid var(--gold);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;
+  font-family:'Amiri',serif;
+  font-size:28px;
+  color:var(--gold);
+  background:rgba(200,146,58,0.08);
+  box-shadow:0 0 40px rgba(200,146,58,0.2),inset 0 0 20px rgba(200,146,58,0.05);
+  animation:emblem-spin 20s linear infinite;
+}
+@keyframes emblem-spin{from{box-shadow:0 0 40px rgba(200,146,58,0.2),inset 0 0 20px rgba(200,146,58,0.05);}50%{box-shadow:0 0 80px rgba(200,146,58,0.4),inset 0 0 40px rgba(200,146,58,0.1);}to{box-shadow:0 0 40px rgba(200,146,58,0.2),inset 0 0 20px rgba(200,146,58,0.05);}}
+
+.login-title-ar {
+  font-family:'Amiri',serif;
+  font-size:28px;color:var(--parchment);
+  line-height:1.2;margin-bottom:4px;
+}
+.login-title-en {
+  font-family:'Playfair Display',serif;
+  font-size:13px;color:rgba(200,146,58,0.7);
+  letter-spacing:4px;text-transform:uppercase;
+}
+.login-subtitle {
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;color:rgba(247,243,236,0.3);
+  letter-spacing:2px;margin-top:8px;
+  text-transform:uppercase;
+}
+
+.login-form-wrap {
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(200,146,58,0.2);
+  backdrop-filter:blur(20px);
+  padding:40px;
+}
+.login-field {
+  margin-bottom:24px;
+}
+.login-field label {
+  display:block;
+  font-size:10px;font-weight:600;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:10px;
+  font-family:'JetBrains Mono',monospace;
+}
+.login-field input {
+  width:100%;
+  padding:14px 18px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(200,146,58,0.25);
+  color:var(--parchment);
+  font-family:'Inter',sans-serif;
+  font-size:15px;
+  outline:none;
+  transition:border-color 0.3s,background 0.3s,box-shadow 0.3s;
+  letter-spacing:0.5px;
+}
+.login-field input::placeholder{color:rgba(247,243,236,0.2);}
+.login-field input:focus{
+  border-color:var(--gold);
+  background:rgba(200,146,58,0.05);
+  box-shadow:0 0 0 3px rgba(200,146,58,0.08);
+}
+.login-error {
+  color:#e74c3c;font-size:12px;
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:1px;margin-top:8px;
+  display:none;
+  padding:8px 12px;
+  background:rgba(231,76,60,0.08);
+  border-left:2px solid #e74c3c;
+}
+.login-error.show{display:block;}
+.login-btn {
+  width:100%;
+  padding:16px;
+  background:linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+  color:var(--deep-green);
+  font-family:'Inter',sans-serif;
+  font-size:13px;font-weight:700;
+  letter-spacing:3px;text-transform:uppercase;
+  border:none;cursor:pointer;
+  margin-top:8px;
+  position:relative;overflow:hidden;
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(200,146,58,0.3);}
+.login-btn:active{transform:translateY(0);}
+.login-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+}
+.login-divider {
+  display:flex;align-items:center;gap:16px;
+  margin:28px 0 0;
+}
+.login-divider::before,.login-divider::after{
+  content:'';flex:1;height:1px;
+  background:rgba(200,146,58,0.15);
+}
+.login-divider span{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:rgba(247,243,236,0.2);
+  letter-spacing:2px;text-transform:uppercase;
+  white-space:nowrap;
+}
+.login-footer-note {
+  text-align:center;margin-top:24px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;color:rgba(247,243,236,0.15);
+  letter-spacing:1px;
+}
+
+/* Login transition */
+.login-exit {
+  animation:loginExit 0.8s cubic-bezier(0.76,0,0.24,1) forwards;
+}
+@keyframes loginExit{
+  0%{opacity:1;transform:scale(1);}
+  40%{opacity:1;transform:scale(1.03);}
+  100%{opacity:0;transform:scale(1.08);pointer-events:none;}
+}
+
+/* ═══════════════════════════════════════
+   MAIN APP (hidden until login)
+═══════════════════════════════════════ */
+#mainApp{display:none;opacity:0;transition:opacity 0.6s ease;}
+#mainApp.show{opacity:1;}
+
+/* ── LANGUAGE TOGGLE ── */
+.lang-toggle {
+  position:fixed;top:16px;right:16px;z-index:9000;
+  display:flex;align-items:center;
+  background:rgba(15,35,24,0.95);
+  border:1px solid rgba(200,146,58,0.3);
+  backdrop-filter:blur(12px);
+  box-shadow:0 4px 32px rgba(0,0,0,0.4);
+  overflow:hidden;
+}
+[dir="rtl"] .lang-toggle{right:auto;left:16px;}
+.lang-btn {
+  padding:10px 20px;font-size:11px;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;
+  border:none;background:transparent;
+  color:rgba(247,243,236,0.45);
+  cursor:pointer;transition:all 0.25s;
+  font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;
+}
+.lang-btn.active{background:var(--gold);color:var(--deep-green);font-weight:700;}
+.lang-btn:hover:not(.active){color:var(--gold);}
+.lang-divider-bar{width:1px;height:18px;background:rgba(200,146,58,0.2);}
+
+/* ── USER BADGE ── */
+.user-badge {
+  position:fixed;top:16px;left:16px;z-index:9000;
+  display:flex;align-items:center;gap:10px;
+  background:rgba(15,35,24,0.95);
+  border:1px solid rgba(200,146,58,0.3);
+  backdrop-filter:blur(12px);
+  padding:8px 16px 8px 10px;
+  box-shadow:0 4px 32px rgba(0,0,0,0.4);
+}
+[dir="rtl"] .user-badge{left:auto;right:16px;flex-direction:row-reverse;}
+.user-avatar {
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:700;color:var(--deep-green);
+  font-family:'Inter',sans-serif;
+}
+.user-info {}
+.user-name{font-size:12px;font-weight:600;color:var(--parchment);line-height:1;}
+.user-role{font-size:10px;color:var(--gold);letter-spacing:1px;font-family:'JetBrains Mono',monospace;}
+.logout-btn {
+  background:none;border:none;color:rgba(247,243,236,0.3);
+  cursor:pointer;font-size:16px;padding:0 0 0 8px;
+  transition:color 0.2s;
+}
+.logout-btn:hover{color:var(--gold);}
+
+/* ── MASTHEAD ── */
+.masthead {
+  position:relative;background:var(--deep-green);
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;text-align:center;
+  overflow:hidden;padding:100px 24px 80px;
+}
+.mast-grid {
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(200,146,58,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,146,58,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+}
+.mast-radial {
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 90% 70% at 50% -10%, rgba(200,146,58,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 90%, rgba(30,66,48,0.8) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 60% at 5% 80%, rgba(15,35,24,0.9) 0%, transparent 50%);
+}
+.mast-geometric {
+  position:absolute;top:10%;right:5%;
+  width:300px;height:300px;opacity:0.07;
+  border:1px solid var(--gold);
+  transform:rotate(15deg);
+  animation:geo-rotate 30s linear infinite;
+}
+.mast-geometric::before {
+  content:'';position:absolute;inset:20px;
+  border:1px solid var(--gold);
+  transform:rotate(30deg);
+}
+.mast-geometric::after {
+  content:'';position:absolute;inset:40px;
+  border:1px solid var(--gold);
+  transform:rotate(-15deg);
+}
+@keyframes geo-rotate{from{transform:rotate(15deg);}to{transform:rotate(375deg);}}
+
+.mast-geo-left {
+  position:absolute;bottom:10%;left:5%;
+  width:200px;height:200px;opacity:0.05;
+  border:1px solid var(--gold);
+  transform:rotate(-20deg);
+  animation:geo-rotate 25s linear infinite reverse;
+}
+
+.masthead-inner{position:relative;z-index:2;max-width:900px;}
+.mast-eyebrow {
+  display:inline-flex;align-items:center;gap:16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:36px;
+}
+.mast-eyebrow::before,.mast-eyebrow::after{content:'';width:48px;height:1px;background:var(--gold);opacity:0.5;}
+.masthead h1 {
+  font-family:'Amiri',serif;
+  font-size:clamp(52px,9vw,108px);
+  font-weight:700;color:var(--parchment);
+  line-height:1;letter-spacing:-1px;
+  margin-bottom:16px;
+  text-shadow:0 0 80px rgba(200,146,58,0.15);
+}
+.masthead-sub {
+  font-family:'Playfair Display',serif;font-style:italic;
+  font-size:clamp(17px,2.5vw,24px);
+  color:var(--gold-light);margin-bottom:28px;opacity:0.85;
+}
+.masthead-desc {
+  font-size:15px;color:rgba(247,243,236,0.55);
+  max-width:580px;margin:0 auto 56px;line-height:1.9;
+}
+[dir="rtl"] .masthead-desc{font-family:'Amiri',serif;font-size:18px;}
+.mast-badges {
+  display:flex;gap:2px;justify-content:center;flex-wrap:wrap;
+}
+.mast-badge {
+  display:flex;flex-direction:column;align-items:center;
+  padding:20px 36px;gap:4px;
+  border:1px solid rgba(200,146,58,0.25);
+  background:rgba(200,146,58,0.04);
+  backdrop-filter:blur(8px);
+}
+.mast-badge-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;}
+.mast-badge-value{font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:var(--parchment);line-height:1;}
+[dir="rtl"] .mast-badge-label{letter-spacing:0;font-family:'Amiri',serif;font-size:12px;text-transform:none;}
+
+.mast-scroll {
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  color:rgba(247,243,236,0.3);
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  animation:scroll-bob 2.5s ease-in-out infinite;
+}
+.mast-scroll::after{content:'';width:1px;height:48px;background:linear-gradient(to bottom,rgba(200,146,58,0.5),transparent);}
+@keyframes scroll-bob{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(8px);}}
+
+/* ── NAV ── */
+nav {
+  position:sticky;top:0;z-index:500;
+  background:rgba(10,22,15,0.97);
+  border-bottom:1px solid rgba(200,146,58,0.15);
+  backdrop-filter:blur(20px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:64px;
+}
+.nav-logo{font-family:'Amiri',serif;font-size:22px;color:var(--gold);font-weight:700;letter-spacing:1px;}
+.nav-links{display:flex;gap:36px;list-style:none;}
+.nav-links a {
+  color:rgba(247,243,236,0.55);text-decoration:none;
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  transition:color 0.2s;font-weight:500;
+  position:relative;
+}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transition:transform 0.2s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a:hover::after{transform:scaleX(1);}
+[dir="rtl"] .nav-links a{letter-spacing:0;font-family:'Amiri',serif;font-size:15px;text-transform:none;}
+
+/* ── STATS BAR ── */
+.stats-bar{background:linear-gradient(135deg,var(--gold) 0%, #b8832a 100%);}
+.stats-inner{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);}
+.stat-block{padding:36px 32px;border-right:1px solid rgba(0,0,0,0.12);text-align:center;position:relative;}
+.stat-block:last-child{border-right:none;}
+.stat-block::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:1px;height:4px;background:rgba(0,0,0,0.2);}
+.stat-num{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--deep-green);line-height:1;margin-bottom:6px;}
+.stat-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(10,22,15,0.6);}
+[dir="rtl"] .stat-label{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;text-transform:none;}
+
+/* ── SECTION SHELL ── */
+.section-shell{max-width:1400px;margin:0 auto;padding:100px 48px;}
+.section-eyebrow {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;font-weight:500;letter-spacing:4px;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:18px;
+  display:flex;align-items:center;gap:14px;
+}
+.section-eyebrow::after{content:'';flex:1;max-width:72px;height:1px;background:var(--gold);opacity:0.4;}
+[dir="rtl"] .section-eyebrow{flex-direction:row-reverse;letter-spacing:0;font-family:'Amiri',serif;font-size:13px;text-transform:none;}
+[dir="rtl"] .section-eyebrow::after{display:none;}
+[dir="rtl"] .section-eyebrow::before{content:'';flex:1;max-width:72px;height:1px;background:var(--gold);opacity:0.4;}
+.section-h{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,52px);font-weight:700;color:var(--ink);line-height:1.15;margin-bottom:20px;}
+.section-intro{font-size:16px;color:var(--fade);max-width:640px;line-height:1.9;margin-bottom:72px;}
+[dir="rtl"] .section-h,[dir="rtl"] .section-intro{font-family:'Amiri',serif;}
+[dir="rtl"] .section-h{font-size:clamp(30px,4vw,56px);}
+[dir="rtl"] .section-intro{font-size:18px;}
+
+/* ── OVERVIEW ── */
+.overview-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;}
+.overview-card{
+  background:var(--surface);padding:40px 36px;
+  position:relative;overflow:hidden;
+  transition:transform 0.3s;
+}
+.overview-card:hover{transform:translateY(-3px);}
+.overview-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.overview-card:nth-child(1)::before{background:linear-gradient(90deg,var(--deep-green),var(--gold));}
+.overview-card:nth-child(2)::before{background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+.overview-card:nth-child(3)::before{background:linear-gradient(90deg,var(--fade),var(--gold));}
+.overview-card-icon{font-size:28px;margin-bottom:20px;}
+.overview-card-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+.overview-card p{font-size:14px;color:#555;line-height:1.85;}
+[dir="rtl"] .overview-card-label{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;text-transform:none;}
+[dir="rtl"] .overview-card p{font-family:'Amiri',serif;font-size:17px;line-height:2;}
+
+/* ── TIMELINE ── */
+.timeline-shell{background:var(--deep-green);padding:100px 0;}
+.timeline-shell .section-h{color:var(--parchment);}
+.timeline-shell .section-intro{color:rgba(247,243,236,0.55);}
+.timeline-shell .section-eyebrow{color:var(--gold);}
+.timeline{position:relative;padding-left:52px;}
+[dir="rtl"] .timeline{padding-left:0;padding-right:52px;}
+.timeline::before{content:'';position:absolute;left:4px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--gold),rgba(200,146,58,0.05));}
+[dir="rtl"] .timeline::before{left:auto;right:4px;}
+.t-item{position:relative;margin-bottom:60px;padding-left:28px;}
+[dir="rtl"] .t-item{padding-left:0;padding-right:28px;}
+.t-item::before{
+  content:'';position:absolute;left:-48px;top:8px;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 0 3px rgba(200,146,58,0.15),0 0 16px rgba(200,146,58,0.2);
+}
+[dir="rtl"] .t-item::before{left:auto;right:-48px;}
+.t-year{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--gold);letter-spacing:3px;margin-bottom:8px;}
+.t-event{font-size:18px;font-weight:600;color:var(--parchment);margin-bottom:8px;font-family:'Playfair Display',serif;}
+.t-detail{font-size:14px;color:rgba(247,243,236,0.5);line-height:1.8;}
+[dir="rtl"] .t-event,[dir="rtl"] .t-detail{font-family:'Amiri',serif;}
+[dir="rtl"] .t-event{font-size:20px;}
+[dir="rtl"] .t-detail{font-size:16px;}
+
+/* ── CRITIQUE SECTION ── */
+.critique-shell{background:linear-gradient(180deg,#0a0e0b 0%, #0f1a12 100%);padding:100px 0;position:relative;overflow:hidden;}
+.critique-shell::before{
+  content:'CRITIQUE';
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Playfair Display',serif;
+  font-size:clamp(80px,15vw,200px);
+  font-weight:900;color:rgba(139,26,26,0.04);
+  white-space:nowrap;pointer-events:none;
+}
+.critique-shell .section-h{color:var(--parchment);}
+.critique-shell .section-intro{color:rgba(247,243,236,0.5);}
+.critique-shell .section-eyebrow{color:var(--crimson-light);}
+.critique-shell .section-eyebrow::after{background:var(--crimson-light);}
+[dir="rtl"] .critique-shell .section-eyebrow::before{background:var(--crimson-light);}
+
+.critique-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:72px;}
+.critique-card{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(139,26,26,0.2);
+  padding:40px 36px;
+  position:relative;overflow:hidden;
+  transition:border-color 0.3s,background 0.3s;
+}
+.critique-card:hover{border-color:rgba(192,57,43,0.4);background:rgba(139,26,26,0.05);}
+.critique-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--crimson),var(--crimson-light));}
+.critique-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:48px;font-weight:500;
+  color:rgba(139,26,26,0.15);
+  line-height:1;margin-bottom:20px;
+}
+.critique-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--crimson-light);margin-bottom:12px;
+}
+.critique-h{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--parchment);margin-bottom:14px;}
+.critique-p{font-size:14px;color:rgba(247,243,236,0.5);line-height:1.85;}
+[dir="rtl"] .critique-label{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;text-transform:none;}
+[dir="rtl"] .critique-h{font-family:'Amiri',serif;font-size:22px;}
+[dir="rtl"] .critique-p{font-family:'Amiri',serif;font-size:17px;line-height:2;}
+
+/* Revolution Warning Banner */
+.revolution-banner {
+  background:linear-gradient(135deg,#1a0505 0%, #2d0808 50%, #1a0505 100%);
+  border:1px solid rgba(192,57,43,0.3);
+  margin-bottom:2px;
+  padding:48px 40px;
+  position:relative;overflow:hidden;
+}
+.revolution-banner::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    45deg,transparent,transparent 10px,rgba(139,26,26,0.03) 10px,rgba(139,26,26,0.03) 20px
+  );
+}
+.revolution-banner::after{
+  content:'⚠';position:absolute;right:40px;top:50%;transform:translateY(-50%);
+  font-size:80px;color:rgba(192,57,43,0.1);
+}
+[dir="rtl"] .revolution-banner::after{right:auto;left:40px;}
+.rev-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:4px;color:var(--crimson-light);text-transform:uppercase;margin-bottom:14px;}
+.rev-title{font-family:'Playfair Display',serif;font-size:clamp(20px,3vw,32px);font-weight:700;color:var(--parchment);margin-bottom:16px;line-height:1.2;}
+.rev-text{font-size:14px;color:rgba(247,243,236,0.5);line-height:1.9;max-width:700px;}
+[dir="rtl"] .rev-label{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;text-transform:none;}
+[dir="rtl"] .rev-title{font-family:'Amiri',serif;font-size:clamp(22px,3vw,36px);}
+[dir="rtl"] .rev-text{font-family:'Amiri',serif;font-size:17px;line-height:2.1;}
+
+.country-impact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.country-card{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(139,26,26,0.15);
+  padding:28px 24px;
+  transition:background 0.2s;
+}
+.country-card:hover{background:rgba(139,26,26,0.07);}
+.country-flag{font-size:24px;margin-bottom:12px;}
+.country-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--parchment);margin-bottom:8px;}
+.country-impact{font-size:13px;color:rgba(247,243,236,0.45);line-height:1.7;}
+.country-badge{display:inline-block;font-size:10px;padding:2px 8px;letter-spacing:1px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:10px;}
+.badge-high{background:rgba(139,26,26,0.25);color:var(--crimson-light);border:1px solid rgba(192,57,43,0.3);}
+.badge-med{background:rgba(200,146,58,0.15);color:var(--gold);border:1px solid rgba(200,146,58,0.3);}
+[dir="rtl"] .country-name{font-family:'Amiri',serif;font-size:18px;}
+[dir="rtl"] .country-impact{font-family:'Amiri',serif;font-size:15px;line-height:1.9;}
+[dir="rtl"] .country-badge{letter-spacing:0;font-family:'Amiri',serif;font-size:12px;text-transform:none;}
+
+/* ── MEMBERS ── */
+.members-shell{background:var(--surface2);padding:100px 0;}
+.search-wrap{position:relative;max-width:440px;margin-bottom:44px;}
+.search-input{
+  width:100%;padding:15px 20px 15px 48px;
+  border:1px solid var(--sand);background:var(--surface);
+  font-family:'Inter',sans-serif;font-size:14px;color:var(--ink);
+  outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+}
+.search-input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,146,58,0.06);}
+[dir="rtl"] .search-input{padding:15px 48px 15px 20px;text-align:right;font-family:'Amiri',serif;}
+.search-icon{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:var(--fade);font-size:16px;pointer-events:none;}
+[dir="rtl"] .search-icon{left:auto;right:18px;}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:52px;}
+.filter-btn{
+  padding:9px 22px;border:1px solid var(--sand);
+  background:transparent;color:var(--fade);
+  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;transition:all 0.2s;font-family:'Inter',sans-serif;
+}
+.filter-btn:hover,.filter-btn.active{background:var(--deep-green);color:var(--gold);border-color:var(--deep-green);}
+[dir="rtl"] .filter-btn{font-family:'Amiri',serif;font-size:15px;letter-spacing:0;text-transform:none;}
+
+.members-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:2px;}
+.member-card{background:var(--surface);cursor:pointer;transition:transform 0.3s,box-shadow 0.3s;position:relative;overflow:hidden;}
+.member-card:hover{transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,0.1);}
+.card-strip{height:3px;background:linear-gradient(90deg,var(--deep-green),var(--gold));}
+.card-inner{padding:36px 32px 64px;}
+.card-era{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;}
+[dir="rtl"] .card-era{font-family:'Amiri',serif;font-size:13px;letter-spacing:0;text-transform:none;}
+.card-name-main{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.15;}
+[dir="rtl"] .card-name-main{font-family:'Amiri',serif;font-size:26px;}
+.card-name-alt{font-size:14px;color:var(--fade);margin-bottom:18px;}
+[dir="rtl"] .card-name-alt{font-family:'Amiri',serif;font-size:16px;}
+.card-role-pill{display:inline-block;background:var(--sand);color:var(--deep-green);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;margin-bottom:20px;}
+[dir="rtl"] .card-role-pill{font-family:'Amiri',serif;font-size:13px;letter-spacing:0;text-transform:none;}
+.card-dates{font-size:12px;color:var(--fade);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.card-dates::before{content:'';width:20px;height:1px;background:var(--gold);opacity:0.4;flex-shrink:0;}
+[dir="rtl"] .card-dates{flex-direction:row-reverse;}
+[dir="rtl"] .card-dates::before{display:none;}
+.card-bio{font-size:13.5px;color:#666;line-height:1.8;margin-bottom:24px;}
+[dir="rtl"] .card-bio{font-family:'Amiri',serif;font-size:16px;line-height:2;}
+.card-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{font-size:10px;padding:4px 10px;border:1px solid rgba(200,146,58,0.2);color:var(--fade);}
+[dir="rtl"] .tag{font-family:'Amiri',serif;font-size:13px;}
+.card-cta{
+  position:absolute;bottom:28px;right:28px;
+  display:flex;align-items:center;gap:8px;
+  font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--gold);opacity:0;transition:opacity 0.2s;
+}
+[dir="rtl"] .card-cta{right:auto;left:28px;flex-direction:row-reverse;}
+.member-card:hover .card-cta{opacity:1;}
+.card-cta-line{width:20px;height:1px;background:var(--gold);}
+.member-card.hidden{display:none;}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(5,12,8,0.92);
+  z-index:8000;display:flex;align-items:center;justify-content:center;
+  padding:24px;opacity:0;pointer-events:none;
+  transition:opacity 0.3s;backdrop-filter:blur(8px);
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{
+  background:var(--parchment);max-width:700px;width:100%;
+  max-height:90vh;overflow-y:auto;
+  transform:translateY(24px) scale(0.98);
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  position:relative;
+}
+.modal-overlay.open .modal{transform:translateY(0) scale(1);}
+.modal-head{background:var(--deep-green);padding:44px 44px 36px;position:relative;}
+.modal-close{
+  position:absolute;top:20px;right:20px;
+  background:transparent;border:1px solid rgba(200,146,58,0.25);
+  color:var(--gold);width:38px;height:38px;
+  font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.2s;font-family:'Inter',sans-serif;
+}
+.modal-close:hover{background:rgba(200,146,58,0.12);}
+[dir="rtl"] .modal-close{right:auto;left:20px;}
+.modal-era{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+[dir="rtl"] .modal-era{letter-spacing:0;font-family:'Amiri',serif;font-size:14px;text-transform:none;}
+.modal-name{font-family:'Playfair Display',serif;font-size:36px;font-weight:700;color:var(--parchment);line-height:1.05;margin-bottom:6px;}
+[dir="rtl"] .modal-name{font-family:'Amiri',serif;font-size:40px;}
+.modal-name-alt{font-size:18px;color:rgba(247,243,236,0.5);margin-bottom:20px;}
+[dir="rtl"] .modal-name-alt{direction:ltr;display:inline-block;}
+.modal-role-pill{display:inline-block;background:var(--gold);color:var(--deep-green);font-size:10px;font-weight:800;letter-spacing:2.5px;text-transform:uppercase;padding:6px 16px;}
+[dir="rtl"] .modal-role-pill{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;text-transform:none;}
+.modal-body{padding:44px;}
+.modal-meta{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-bottom:32px;border-bottom:1px solid var(--sand);margin-bottom:32px;}
+.meta-item label{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:5px;}
+.meta-item span{font-size:14px;color:var(--ink);font-weight:500;}
+[dir="rtl"] .meta-item label{font-family:'Amiri',serif;font-size:13px;letter-spacing:0;text-transform:none;}
+[dir="rtl"] .meta-item span{font-family:'Amiri',serif;font-size:16px;}
+.modal-section-h{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin:28px 0 12px;}
+[dir="rtl"] .modal-section-h{font-family:'Amiri',serif;font-size:20px;}
+.modal-p{font-size:14px;color:#555;line-height:1.9;}
+[dir="rtl"] .modal-p{font-family:'Amiri',serif;font-size:17px;line-height:2.1;}
+.modal-list{list-style:none;margin-top:12px;}
+.modal-list li{font-size:13.5px;color:#555;padding:9px 0;border-bottom:1px solid var(--sand);display:flex;gap:14px;align-items:flex-start;}
+.modal-list li::before{content:'◆';color:var(--gold);font-size:8px;margin-top:5px;flex-shrink:0;}
+[dir="rtl"] .modal-list li{flex-direction:row-reverse;font-family:'Amiri',serif;font-size:16px;}
+
+/* ── LEGACY ── */
+.legacy-shell{background:var(--deep-green);padding:80px 0;}
+.legacy-shell .section-h{color:var(--parchment);}
+.legacy-shell .section-intro{color:rgba(247,243,236,0.5);}
+.legacy-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:rgba(200,146,58,0.1);margin-top:52px;}
+.legacy-item{background:rgba(15,35,24,0.9);padding:32px 26px;transition:background 0.2s;}
+.legacy-item:hover{background:rgba(30,66,48,0.9);}
+.legacy-country{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
+.legacy-org{color:var(--parchment);font-size:15px;font-weight:500;}
+[dir="rtl"] .legacy-country{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;text-transform:none;}
+[dir="rtl"] .legacy-org{font-family:'Amiri',serif;font-size:18px;}
+
+/* ── FOOTER ── */
+footer{background:#040a06;padding:72px 48px;text-align:center;}
+.footer-logo{font-family:'Amiri',serif;font-size:28px;color:var(--gold);margin-bottom:20px;letter-spacing:2px;}
+footer p{font-size:12px;color:rgba(247,243,236,0.18);letter-spacing:1px;margin-bottom:4px;}
+[dir="rtl"] footer p{font-family:'Amiri',serif;font-size:14px;letter-spacing:0;}
+
+/* ── UTILS ── */
+.fade-up{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .section-shell{padding:60px 20px;}
+  .stats-inner{grid-template-columns:1fr 1fr;}
+  .overview-grid{grid-template-columns:1fr;}
+  .critique-grid{grid-template-columns:1fr;}
+  .country-impact-grid{grid-template-columns:1fr 1fr;}
+  .modal-meta{grid-template-columns:1fr;}
+  .modal-body{padding:24px;}
+  .modal-head{padding:28px 24px;}
+  .lang-toggle{top:8px;right:8px;}
+  .user-badge{top:8px;left:8px;}
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🏋️ Eng. Bader Website</h1>
-            <p>Professional Fitness & Nutrition Calculator</p>
-        </div>
 
-        <div class="tabs">
-            <button class="tab-button active" onclick="showTab('mass-gain')">💪 Mass Gain</button>
-            <button class="tab-button" onclick="showTab('weight-loss')">⚡ Weight Loss</button>
-        </div>
+<!-- ═══ LOGIN SCREEN ═══ -->
+<div id="loginScreen">
+  <div class="login-bg-pattern"></div>
+  <div class="login-glow"></div>
+  <div class="login-glow2"></div>
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-emblem">إخ</div>
+      <div class="login-title-ar">الإخوان المسلمون</div>
+      <div class="login-title-en">Muslim Brotherhood Archive</div>
+      <div class="login-subtitle">// Classified Historical Record</div>
+    </div>
+    <div class="login-form-wrap">
+      <div class="login-field">
+        <label>Username / اسم المستخدم</label>
+        <input type="text" id="loginUser" placeholder="Enter username" autocomplete="username">
+      </div>
+      <div class="login-field">
+        <label>Password / كلمة المرور</label>
+        <input type="password" id="loginPass" placeholder="Enter password" autocomplete="current-password">
+        <div class="login-error" id="loginError">⚠ Invalid credentials — access denied</div>
+      </div>
+      <button class="login-btn" onclick="attemptLogin()">Access Archive →</button>
+      <div class="login-divider"><span>Secure Connection</span></div>
+      <div class="login-footer-note">// Restricted access — authorized personnel only</div>
+    </div>
+  </div>
+</div>
 
-        <div class="content">
-            <!-- MASS GAIN -->
-            <div id="mass-gain" class="tab-content active">
-                <h2>Build Muscle Mass</h2>
-                <p style="color: #666; margin-bottom: 20px;">Enter your details for your personalized nutrition plan.</p>
+<!-- ═══ MAIN APP ═══ -->
+<div id="mainApp">
 
-                <form onsubmit="calculateMassGain(event)">
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" id="mg-name" placeholder="Your Name" required>
-                    </div>
+<!-- LANG TOGGLE -->
+<div class="lang-toggle">
+  <button class="lang-btn active" id="btnEn" onclick="setLang('en')">🇬🇧 EN</button>
+  <div class="lang-divider-bar"></div>
+  <button class="lang-btn" id="btnAr" onclick="setLang('ar')">🇸🇦 AR</button>
+</div>
 
-                    <div class="form-group">
-                        <label>Gender</label>
-                        <div class="radio-group">
-                            <div class="radio-option">
-                                <input type="radio" id="mg-male" name="mg-gender" value="male" checked>
-                                <label for="mg-male">Male</label>
-                            </div>
-                            <div class="radio-option">
-                                <input type="radio" id="mg-female" name="mg-gender" value="female">
-                                <label for="mg-female">Female</label>
-                            </div>
-                        </div>
-                    </div>
+<!-- USER BADGE -->
+<div class="user-badge">
+  <div class="user-avatar">B</div>
+  <div class="user-info">
+    <div class="user-name">Bader</div>
+    <div class="user-role">ANALYST</div>
+  </div>
+  <button class="logout-btn" onclick="logout()" title="Logout">⏻</button>
+</div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Age (years)</label>
-                            <input type="number" id="mg-age" min="15" max="100" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Weight (kg)</label>
-                            <input type="number" id="mg-weight" min="30" max="250" step="0.1" required>
-                        </div>
-                    </div>
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="mast-grid"></div>
+  <div class="mast-radial"></div>
+  <div class="mast-geometric"></div>
+  <div class="mast-geo-left"></div>
+  <div class="masthead-inner">
+    <div class="mast-eyebrow" data-en="Classified Historical Archive" data-ar="الأرشيف التاريخي السري">Classified Historical Archive</div>
+    <h1>الإخوان المسلمون</h1>
+    <p class="masthead-sub" data-en="The Muslim Brotherhood" data-ar="جماعة الإخوان المسلمين">The Muslim Brotherhood</p>
+    <p class="masthead-desc" data-en="A comprehensive scholarly record of the figures, founders, ideology, political impact — and critical analysis — of one of the Arab world's most consequential political movements." data-ar="سجل علمي شامل يتناول شخصيات وأيديولوجيا وأثر جماعة الإخوان المسلمين السياسي وتحليلاً نقدياً لأحد أكثر التحركات السياسية تأثيراً في العالم العربي.">A comprehensive scholarly record of the figures, founders, ideology, political impact — and critical analysis — of one of the Arab world's most consequential political movements.</p>
+    <div class="mast-badges">
+      <div class="mast-badge">
+        <span class="mast-badge-label" data-en="Founded" data-ar="تأسست">Founded</span>
+        <span class="mast-badge-value">1928</span>
+      </div>
+      <div class="mast-badge">
+        <span class="mast-badge-label" data-en="Countries" data-ar="دولة">Countries</span>
+        <span class="mast-badge-value">70+</span>
+      </div>
+      <div class="mast-badge">
+        <span class="mast-badge-label" data-en="Supreme Guides" data-ar="مرشد عام">Guides</span>
+        <span class="mast-badge-value">8</span>
+      </div>
+    </div>
+  </div>
+  <div class="mast-scroll" data-en="Scroll" data-ar="مرر">Scroll</div>
+</header>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Height (cm)</label>
-                            <input type="number" id="mg-height" min="140" max="220" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Activity Level</label>
-                            <select id="mg-activity" required>
-                                <option value="">Select</option>
-                                <option value="1.2">Sedentary (little exercise)</option>
-                                <option value="1.375">Light (1-3 days/week)</option>
-                                <option value="1.55">Moderate (3-5 days/week)</option>
-                                <option value="1.725">Very Active (6-7 days/week)</option>
-                                <option value="1.9">Extremely Active</option>
-                            </select>
-                        </div>
-                    </div>
+<nav>
+  <div class="nav-logo">الإخوان</div>
+  <ul class="nav-links">
+    <li><a href="#overview" data-en="Overview" data-ar="نظرة عامة">Overview</a></li>
+    <li><a href="#timeline" data-en="Timeline" data-ar="الجدول الزمني">Timeline</a></li>
+    <li><a href="#critique" data-en="Critique" data-ar="النقد">Critique</a></li>
+    <li><a href="#members" data-en="Members" data-ar="الأعضاء">Members</a></li>
+    <li><a href="#legacy" data-en="Legacy" data-ar="الإرث">Legacy</a></li>
+  </ul>
+</nav>
 
-                    <button type="submit">Calculate Plan</button>
-                </form>
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-block"><div class="stat-num">1928</div><div class="stat-label" data-en="Year Founded" data-ar="سنة التأسيس">Year Founded</div></div>
+    <div class="stat-block"><div class="stat-num">70+</div><div class="stat-label" data-en="Countries Active" data-ar="دولة نشطة">Countries Active</div></div>
+    <div class="stat-block"><div class="stat-num">8</div><div class="stat-label" data-en="Supreme Guides" data-ar="مرشد عام">Supreme Guides</div></div>
+    <div class="stat-block"><div class="stat-num">95+</div><div class="stat-label" data-en="Years of History" data-ar="عاماً من التاريخ">Years of History</div></div>
+  </div>
+</div>
 
-                <div id="mg-results" class="results">
-                    <h3>📊 Your Daily Nutrition Plan</h3>
-                    <div class="result-grid">
-                        <div class="result-card">
-                            <h4>Calories</h4>
-                            <div class="value" id="mg-calories">0</div>
-                            <div class="unit">kcal/day</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Protein</h4>
-                            <div class="value" id="mg-protein">0</div>
-                            <div class="unit">grams/day</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Carbs</h4>
-                            <div class="value" id="mg-carbs">0</div>
-                            <div class="unit">grams/day</div>
-                        </div>
-                    </div>
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="section-shell">
+    <div class="section-eyebrow fade-up" data-en="Context" data-ar="السياق">Context</div>
+    <h2 class="section-h fade-up" data-en="Origins &amp; Background" data-ar="النشأة والخلفية">Origins &amp; Background</h2>
+    <p class="section-intro fade-up" data-en="Founded in Ismailia, Egypt in March 1928 by Hassan al-Banna, the Muslim Brotherhood emerged as a response to British colonialism and Western cultural influence — beginning as a religious reform movement before evolving into a major political force across the Arab world." data-ar="تأسست في الإسماعيلية بمصر في مارس 1928 على يد حسن البنا، كردة فعل على الاستعمار البريطاني والنفوذ الثقافي الغربي، بدأت حركةً إصلاحيةً دينيةً ثم تطورت لتصبح قوةً سياسيةً كبرى في العالم العربي.">Founded in Ismailia, Egypt in March 1928 by Hassan al-Banna, the Muslim Brotherhood emerged as a response to British colonialism and Western cultural influence — beginning as a religious reform movement before evolving into a major political force across the Arab world.</p>
+    <div class="overview-grid fade-up">
+      <div class="overview-card">
+        <div class="overview-card-icon">🕌</div>
+        <div class="overview-card-label" data-en="Mission" data-ar="الرسالة">Mission</div>
+        <p data-en="To establish an Islamic state governed by Sharia through education, social welfare, and political engagement rather than military force — operating on a principle of gradual transformation." data-ar="إقامة دولة إسلامية تحكمها الشريعة عبر التعليم والرعاية الاجتماعية والمشاركة السياسية لا القوة العسكرية، على مبدأ التحول التدريجي.">To establish an Islamic state governed by Sharia through education, social welfare, and political engagement rather than military force — operating on a principle of gradual transformation.</p>
+      </div>
+      <div class="overview-card">
+        <div class="overview-card-icon">⚙️</div>
+        <div class="overview-card-label" data-en="Structure" data-ar="الهيكل التنظيمي">Structure</div>
+        <p data-en="A hierarchical organization led by the Supreme Guide (المرشد العام), supported by a Guidance Bureau and Shura Council — a model adopted by dozens of affiliated movements worldwide." data-ar="تنظيم هرمي يقوده المرشد العام، مدعوماً بمكتب الإرشاد ومجلس الشورى — نموذج تبنّته عشرات الحركات المنتسبة حول العالم.">A hierarchical organization led by the Supreme Guide (المرشد العام), supported by a Guidance Bureau and Shura Council — a model adopted by dozens of affiliated movements worldwide.</p>
+      </div>
+      <div class="overview-card">
+        <div class="overview-card-icon">🌐</div>
+        <div class="overview-card-label" data-en="Reach" data-ar="الانتشار">Reach</div>
+        <p data-en="Active chapters and affiliated movements across the Middle East, North Africa, Europe, and beyond — one of history's most expansive transnational political networks." data-ar="فروع وحركات منتسبة في الشرق الأوسط وشمال أفريقيا وأوروبا وما وراءها — من أوسع الشبكات السياسية العابرة للحدود في التاريخ.">Active chapters and affiliated movements across the Middle East, North Africa, Europe, and beyond — one of history's most expansive transnational political networks.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-                    <div class="result-grid">
-                        <div class="result-card">
-                            <h4>Fat</h4>
-                            <div class="value" id="mg-fat">0</div>
-                            <div class="unit">grams/day</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Surplus</h4>
-                            <div class="value">+400</div>
-                            <div class="unit">kcal/day</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Weekly Gain</h4>
-                            <div class="value">0.5</div>
-                            <div class="unit">kg/week</div>
-                        </div>
-                    </div>
+<!-- TIMELINE -->
+<div class="timeline-shell" id="timeline">
+  <div class="section-shell" style="padding-top:0;padding-bottom:0;">
+    <div class="section-eyebrow" data-en="Chronology" data-ar="التسلسل الزمني">Chronology</div>
+    <h2 class="section-h" data-en="Key Moments in History" data-ar="المحطات التاريخية الكبرى">Key Moments in History</h2>
+    <p class="section-intro" data-en="From its founding in colonial Egypt to its role in the Arab Spring, a century-long arc of repression, revival, and global influence." data-ar="من تأسيسها في مصر الخاضعة للاستعمار حتى دورها في الربيع العربي، مسيرة قرن من القمع والنهضة والتأثير العالمي.">From its founding in colonial Egypt to its role in the Arab Spring, a century-long arc of repression, revival, and global influence.</p>
+    <div class="timeline">
+      <div class="t-item"><div class="t-year">1928</div><div class="t-event" data-en="The Brotherhood is Founded" data-ar="تأسيس الجماعة">The Brotherhood is Founded</div><div class="t-detail" data-en="Hassan al-Banna establishes the organization in Ismailia with six workers from the Suez Canal Company, beginning as a youth welfare and Islamic revivalist movement." data-ar="أسّس حسن البنا الجماعة في الإسماعيلية مع ستة عمال من شركة قناة السويس، بادئاً حركةً للرعاية الشبابية وإحياء الفكر الإسلامي.">Hassan al-Banna establishes the organization in Ismailia with six workers from the Suez Canal Company, beginning as a youth welfare and Islamic revivalist movement.</div></div>
+      <div class="t-item"><div class="t-year">1936–39</div><div class="t-event" data-en="Rapid Expansion" data-ar="التوسع السريع">Rapid Expansion</div><div class="t-detail" data-en="The Brotherhood expands dramatically, expressing solidarity with Palestinians during the Arab Revolt. Membership grows from 800 to over 200,000 within a decade." data-ar="تمدّدت الجماعة بسرعة مذهلة، معربةً عن تضامنها مع الفلسطينيين إبان الثورة العربية. ارتفع عدد أعضائها من 800 إلى أكثر من 200,000 في عقد واحد.">The Brotherhood expands dramatically, expressing solidarity with Palestinians during the Arab Revolt. Membership grows from 800 to over 200,000 within a decade.</div></div>
+      <div class="t-item"><div class="t-year">1949</div><div class="t-event" data-en="Al-Banna Assassinated" data-ar="اغتيال البنا">Al-Banna Assassinated</div><div class="t-detail" data-en="Following government dissolution of the Brotherhood, Hassan al-Banna is assassinated in Cairo in February 1949. The organization survives and reorganizes." data-ar="في أعقاب حل الحكومة للجماعة، اغتيل حسن البنا في القاهرة في فبراير 1949. استمر التنظيم وأعاد تشكيل نفسه.">Following government dissolution of the Brotherhood, Hassan al-Banna is assassinated in Cairo in February 1949. The organization survives and reorganizes.</div></div>
+      <div class="t-item"><div class="t-year">1954</div><div class="t-event" data-en="Nasser's Suppression" data-ar="قمع ناصر للجماعة">Nasser's Suppression</div><div class="t-detail" data-en="Following an assassination attempt on President Nasser, the Brotherhood is banned. Thousands imprisoned, including Sayyid Qutb, whose prison writings become globally influential." data-ar="في أعقاب محاولة اغتيال الرئيس ناصر، حُظرت الجماعة وسُجن الآلاف من أعضائها بمن فيهم سيد قطب الذي باتت كتاباته السجنية ذات تأثير عالمي.">Following an assassination attempt on President Nasser, the Brotherhood is banned. Thousands imprisoned, including Sayyid Qutb, whose prison writings become globally influential.</div></div>
+      <div class="t-item"><div class="t-year">1966</div><div class="t-event" data-en="Execution of Sayyid Qutb" data-ar="إعدام سيد قطب">Execution of Sayyid Qutb</div><div class="t-detail" data-en="Sayyid Qutb is executed by hanging. His 'Milestones' becomes a foundational text for radical Islamist movements far beyond the Brotherhood itself." data-ar="نُفّذ حكم الإعدام بحق سيد قطب شنقاً. أصبح كتابه 'معالم في الطريق' نصاً تأسيسياً للحركات الإسلامية المتشددة التي تجاوزت الجماعة ذاتها.">Sayyid Qutb is executed by hanging. His 'Milestones' becomes a foundational text for radical Islamist movements far beyond the Brotherhood itself.</div></div>
+      <div class="t-item"><div class="t-year">2011–12</div><div class="t-event" data-en="Arab Spring — Electoral Victory" data-ar="الربيع العربي والانتصار الانتخابي">Arab Spring — Electoral Victory</div><div class="t-detail" data-en="Following Egypt's revolution, the Freedom and Justice Party wins parliamentary elections. Mohamed Morsi becomes Egypt's first democratically elected civilian president." data-ar="عقب ثورة مصر، فاز حزب الحرية والعدالة بالانتخابات البرلمانية. أصبح محمد مرسي أول رئيس مدني منتخب ديمقراطياً في مصر.">Following Egypt's revolution, the Freedom and Justice Party wins parliamentary elections. Mohamed Morsi becomes Egypt's first democratically elected civilian president.</div></div>
+      <div class="t-item"><div class="t-year">2013</div><div class="t-event" data-en="Military Coup &amp; Global Crackdown" data-ar="الانقلاب العسكري والقمع العالمي">Military Coup &amp; Global Crackdown</div><div class="t-detail" data-en="President Morsi is removed in a military coup. Egypt, Saudi Arabia, UAE, and Russia designate the Brotherhood a terrorist organization. A wave of arrests and bans follows worldwide." data-ar="أُطيح بالرئيس مرسي في انقلاب عسكري. صنّفت مصر والسعودية والإمارات وروسيا الجماعةَ منظمةً إرهابية، وتبع ذلك موجة من الاعتقالات والحظر حول العالم.">President Morsi is removed in a military coup. Egypt, Saudi Arabia, UAE, and Russia designate the Brotherhood a terrorist organization. A wave of arrests and bans follows worldwide.</div></div>
+    </div>
+  </div>
+</div>
 
-                    <div class="meals-section">
-                        <h3>🍽️ Sample Meal Plan</h3>
-                        <div class="meal-card">
-                            <h4>🌅 Breakfast</h4>
-                            <p>3 eggs + toast + banana + peanut butter | 550 cal</p>
-                        </div>
-                        <div class="meal-card">
-                            <h4>🥤 Snack</h4>
-                            <p>Protein shake + oats + banana | 450 cal</p>
-                        </div>
-                        <div class="meal-card">
-                            <h4>🍝 Lunch</h4>
-                            <p>200g chicken + 300g rice + vegetables | 700 cal</p>
-                        </div>
-                        <div class="meal-card">
-                            <h4>🥩 Dinner</h4>
-                            <p>200g beef + sweet potatoes + broccoli | 650 cal</p>
-                        </div>
-                    </div>
+<!-- CRITIQUE SECTION -->
+<div class="critique-shell" id="critique">
+  <div class="section-shell" style="padding-top:0;padding-bottom:0;">
+    <div class="section-eyebrow" data-en="Critical Analysis" data-ar="التحليل النقدي">Critical Analysis</div>
+    <h2 class="section-h" data-en="Disadvantages &amp; Destabilizing Effects" data-ar="السلبيات والآثار المزعزِعة للاستقرار">Disadvantages &amp; Destabilizing Effects</h2>
+    <p class="section-intro" data-en="A scholarly examination of the critiques, structural failures, and destabilizing political effects attributed to the Muslim Brotherhood across the Arab world — including its relationship to revolutionary ideology." data-ar="فحص علمي للانتقادات والإخفاقات الهيكلية والآثار السياسية المزعزعة للاستقرار المنسوبة إلى الجماعة في العالم العربي، بما يشمل علاقتها بالأيديولوجيا الثورية.">A scholarly examination of the critiques, structural failures, and destabilizing political effects attributed to the Muslim Brotherhood across the Arab world — including its relationship to revolutionary ideology.</p>
 
-                    <div class="workout-section">
-                        <h3>💪 Choose Your Workout Schedule</h3>
-                        <div class="schedule-selector">
-                            <button type="button" class="schedule-btn active" onclick="selectSchedule('mg-ul')">📅 Upper & Lower</button>
-                            <button type="button" class="schedule-btn" onclick="selectSchedule('mg-ppl')">🔄 Push / Pull / Legs</button>
-                        </div>
-
-                        <!-- Upper & Lower Schedule -->
-                        <div id="mg-ul" class="schedule-content active">
-                            <div class="schedule-title">📅 Upper & Lower Split (4 Days/Week)</div>
-                            
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🔼 Upper Body Days</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Bench Press</div>
-                                    <div class="exercise-info">
-                                        <h4>Bench Press</h4>
-                                        <p>4 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=4Y2ZdHCOXok" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Barbell Rows</div>
-                                    <div class="exercise-info">
-                                        <h4>Barbell Rows</h4>
-                                        <p>4 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/shorts/HamNqVyElPc" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Pull Ups</div>
-                                    <div class="exercise-info">
-                                        <h4>Pull Ups</h4>
-                                        <p>4 sets × 8-12 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=bb8_5vZV5dU" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Overhead Press</div>
-                                    <div class="exercise-info">
-                                        <h4>Overhead Press</h4>
-                                        <p>3 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=Did01dFR3Lk" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🔽 Lower Body Days</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Barbell Squat</div>
-                                    <div class="exercise-info">
-                                        <h4>Barbell Squat</h4>
-                                        <p>4 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=my0tLDaWyDU" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Deadlift</div>
-                                    <div class="exercise-info">
-                                        <h4>Deadlift</h4>
-                                        <p>4 sets × 6-8 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=XxWcirHIwVo" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-text">
-                                <strong>📅 Week Structure:</strong><br>
-                                Day 1: Upper Body | Day 2: Lower Body | Day 3: Rest | Day 4: Upper Body | Day 5: Lower Body | Day 6-7: Rest
-                            </div>
-                        </div>
-
-                        <!-- Push Pull Legs Schedule -->
-                        <div id="mg-ppl" class="schedule-content">
-                            <div class="schedule-title">🔄 Push / Pull / Legs Split (6 Days/Week)</div>
-
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🔵 Push Days (Chest, Shoulders, Triceps)</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Bench Press</div>
-                                    <div class="exercise-info">
-                                        <h4>Bench Press</h4>
-                                        <p>4 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=vcVrIB9yP9I" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Overhead Press</div>
-                                    <div class="exercise-info">
-                                        <h4>Overhead Press</h4>
-                                        <p>3 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=4Y2ZdHCOXok" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🔴 Pull Days (Back, Biceps)</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Barbell Rows</div>
-                                    <div class="exercise-info">
-                                        <h4>Barbell Rows</h4>
-                                        <p>4 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=FWJR5Ve8bnQ" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Pull Ups</div>
-                                    <div class="exercise-info">
-                                        <h4>Pull Ups</h4>
-                                        <p>4 sets × 8-12 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=bb8_5vZV5dU" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🟢 Leg Days</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Barbell Squat</div>
-                                    <div class="exercise-info">
-                                        <h4>Barbell Squat</h4>
-                                        <p>4 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=gcNh17Ckjgg" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Deadlift</div>
-                                    <div class="exercise-info">
-                                        <h4>Deadlift</h4>
-                                        <p>4 sets × 6-8 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=XxWcirHIwVo" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-text">
-                                <strong>📅 Week Structure:</strong><br>
-                                Day 1: Push | Day 2: Pull | Day 3: Legs | Day 4: Push | Day 5: Pull | Day 6: Legs | Day 7: Rest
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- WEIGHT LOSS -->
-            <div id="weight-loss" class="tab-content">
-                <h2>Lose Weight Effectively</h2>
-                <p style="color: #666; margin-bottom: 20px;">Enter your details for your personalized nutrition plan.</p>
-
-                <form onsubmit="calculateWeightLoss(event)">
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" id="wl-name" placeholder="Your Name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Gender</label>
-                        <div class="radio-group">
-                            <div class="radio-option">
-                                <input type="radio" id="wl-male" name="wl-gender" value="male" checked>
-                                <label for="wl-male">Male</label>
-                            </div>
-                            <div class="radio-option">
-                                <input type="radio" id="wl-female" name="wl-gender" value="female">
-                                <label for="wl-female">Female</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Age (years)</label>
-                            <input type="number" id="wl-age" min="15" max="100" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Weight (kg)</label>
-                            <input type="number" id="wl-weight" min="30" max="250" step="0.1" required>
-                        </div>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Height (cm)</label>
-                            <input type="number" id="wl-height" min="140" max="220" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Activity Level</label>
-                            <select id="wl-activity" required>
-                                <option value="">Select</option>
-                                <option value="1.2">Sedentary (little exercise)</option>
-                                <option value="1.375">Light (1-3 days/week)</option>
-                                <option value="1.55">Moderate (3-5 days/week)</option>
-                                <option value="1.725">Very Active (6-7 days/week)</option>
-                                <option value="1.9">Extremely Active</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="activity-section">
-                        <h4>Weight Loss Pace</h4>
-                        <div class="radio-group">
-                            <div class="radio-option">
-                                <input type="radio" id="wl-slow" name="wl-pace" value="slow" checked>
-                                <label for="wl-slow">Slow (0.25 kg/week)</label>
-                            </div>
-                            <div class="radio-option">
-                                <input type="radio" id="wl-moderate" name="wl-pace" value="moderate">
-                                <label for="wl-moderate">Moderate (0.5 kg/week)</label>
-                            </div>
-                            <div class="radio-option">
-                                <input type="radio" id="wl-fast" name="wl-pace" value="fast">
-                                <label for="wl-fast">Fast (1 kg/week)</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit">Calculate Plan</button>
-                </form>
-
-                <div id="wl-results" class="results">
-                    <h3>📊 Your Daily Nutrition Plan</h3>
-                    <div class="result-grid">
-                        <div class="result-card">
-                            <h4>Calories</h4>
-                            <div class="value" id="wl-calories">0</div>
-                            <div class="unit">kcal/day</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Protein</h4>
-                            <div class="value" id="wl-protein">0</div>
-                            <div class="unit">grams/day</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Carbs</h4>
-                            <div class="value" id="wl-carbs">0</div>
-                            <div class="unit">grams/day</div>
-                        </div>
-                    </div>
-
-                    <div class="result-grid">
-                        <div class="result-card">
-                            <h4>Fat</h4>
-                            <div class="value" id="wl-fat">0</div>
-                            <div class="unit">grams/day</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Deficit</h4>
-                            <div class="value" id="wl-deficit">-500</div>
-                            <div class="unit">kcal/day</div>
-                        </div>
-                        <div class="result-card">
-                            <h4>Weekly Loss</h4>
-                            <div class="value" id="wl-weekly">0.5</div>
-                            <div class="unit">kg/week</div>
-                        </div>
-                    </div>
-
-                    <div class="meals-section">
-                        <h3>🍽️ Low Calorie Meal Plan</h3>
-                        <div class="meal-card">
-                            <h4>🌅 Breakfast</h4>
-                            <p>3 egg whites + toast + oatmeal + berries | 280 cal</p>
-                        </div>
-                        <div class="meal-card">
-                            <h4>🥤 Snack</h4>
-                            <p>Protein shake + water | 120 cal</p>
-                        </div>
-                        <div class="meal-card">
-                            <h4>🍗 Lunch</h4>
-                            <p>150g chicken + brown rice + vegetables | 380 cal</p>
-                        </div>
-                        <div class="meal-card">
-                            <h4>🐟 Dinner</h4>
-                            <p>150g salmon + sweet potatoes + green beans | 420 cal</p>
-                        </div>
-                    </div>
-
-                    <div class="workout-section">
-                        <h3>⚡ Choose Your Workout Schedule</h3>
-                        <div class="schedule-selector">
-                            <button type="button" class="schedule-btn active" onclick="selectSchedule('wl-ul')">📅 Upper & Lower</button>
-                            <button type="button" class="schedule-btn" onclick="selectSchedule('wl-ppl')">🔄 Push / Pull / Legs</button>
-                        </div>
-
-                        <!-- Upper & Lower Schedule -->
-                        <div id="wl-ul" class="schedule-content active">
-                            <div class="schedule-title">📅 Upper & Lower Split (4 Days/Week)</div>
-                            
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🔼 Upper Body + Cardio</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Bench Press</div>
-                                    <div class="exercise-info">
-                                        <h4>Bench Press</h4>
-                                        <p>3 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=4Y2ZdHCOXok" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Pull Ups</div>
-                                    <div class="exercise-info">
-                                        <h4>Pull Ups</h4>
-                                        <p>3 sets × 8-12 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=p40iUjf02j0" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">HIIT Cardio</div>
-                                    <div class="exercise-info">
-                                        <h4>HIIT Cardio</h4>
-                                        <p>20-30 mins</p>
-                                        <a href="https://www.youtube.com/watch?v=M0uO8X3_tEA" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🔽 Lower Body + Cardio</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Barbell Squat</div>
-                                    <div class="exercise-info">
-                                        <h4>Barbell Squat</h4>
-                                        <p>3 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=my0tLDaWyDU" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Jump Rope</div>
-                                    <div class="exercise-info">
-                                        <h4>Jump Rope</h4>
-                                        <p>3 sets × 3 mins</p>
-                                        <a href="https://www.youtube.com/watch?v=DTdaiqR9now" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-text">
-                                <strong>📅 Week Structure:</strong><br>
-                                Day 1: Upper + Cardio | Day 2: Lower + Cardio | Day 3: Rest | Day 4: Upper + Cardio | Day 5: Lower + Cardio | Day 6-7: Rest
-                            </div>
-                        </div>
-
-                        <!-- Push Pull Legs Schedule -->
-                        <div id="wl-ppl" class="schedule-content">
-                            <div class="schedule-title">🔄 Push / Pull / Legs + Cardio (6 Days/Week)</div>
-
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🔵 Push Days</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Bench Press</div>
-                                    <div class="exercise-info">
-                                        <h4>Bench Press</h4>
-                                        <p>3 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=4Y2ZdHCOXok" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">HIIT Cardio</div>
-                                    <div class="exercise-info">
-                                        <h4>HIIT (20 mins)</h4>
-                                        <p>30s sprint / 30s rest</p>
-                                        <a href="https://www.youtube.com/watch?v=4nPKyvKmFi0" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🔴 Pull Days</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Pull Ups</div>
-                                    <div class="exercise-info">
-                                        <h4>Pull Ups</h4>
-                                        <p>3 sets × 8-12 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=bb8_5vZV5dU" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Mountain Climbers</div>
-                                    <div class="exercise-info">
-                                        <h4>Mountain Climbers</h4>
-                                        <p>3 sets × 30 sec</p>
-                                        <a href="https://www.youtube.com/watch?v=ZhiCSdOVJp0" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="schedule-title" style="margin-top: 30px; font-size: 1.1em;">🟢 Leg Days</div>
-                            <div class="workout-grid">
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">Barbell Squat</div>
-                                    <div class="exercise-info">
-                                        <h4>Barbell Squat</h4>
-                                        <p>3 sets × 8-10 reps</p>
-                                        <a href="https://www.youtube.com/watch?v=my0tLDaWyDU" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                                <div class="exercise-card">
-                                    <div class="exercise-header" style="background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);">Jump Rope</div>
-                                    <div class="exercise-info">
-                                        <h4>Jump Rope</h4>
-                                        <p>3 sets × 3 mins</p>
-                                        <a href="https://www.youtube.com/watch?v=DTdaiqR9now" target="_blank" class="youtube-btn">▶ Watch</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="info-text">
-                                <strong>📅 Week Structure:</strong><br>
-                                Day 1: Push + HIIT | Day 2: Pull + Cardio | Day 3: Legs + Cardio | Day 4: Push + HIIT | Day 5: Pull + Cardio | Day 6: Legs + Cardio | Day 7: Rest
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="critique-grid">
+      <div class="critique-card">
+        <div class="critique-num">01</div>
+        <div class="critique-label" data-en="Democratic Legitimacy" data-ar="الشرعية الديمقراطية">Democratic Legitimacy</div>
+        <div class="critique-h" data-en="Selective Embrace of Democracy" data-ar="التعامل الانتقائي مع الديمقراطية">Selective Embrace of Democracy</div>
+        <p class="critique-p" data-en="Critics argue the Brotherhood uses democratic processes instrumentally — participating in elections to gain power while maintaining internal hierarchical structures incompatible with democratic governance. Morsi's sweeping 2012 constitutional declaration, which placed him above judicial oversight, embodied this tension." data-ar="يرى المنتقدون أن الجماعة تتعامل مع الديمقراطية بانتقائية أداتية — تشارك في الانتخابات بحثاً عن السلطة مع الإبقاء على هياكل داخلية هرمية لا تتوافق مع الحوكمة الديمقراطية. جسّد الإعلان الدستوري لمرسي عام 2012 هذا التناقض بوضوح.">Critics argue the Brotherhood uses democratic processes instrumentally — participating in elections to gain power while maintaining internal hierarchical structures incompatible with democratic governance. Morsi's sweeping 2012 constitutional declaration embodied this tension.</p>
+      </div>
+      <div class="critique-card">
+        <div class="critique-num">02</div>
+        <div class="critique-label" data-en="Political Instability" data-ar="عدم الاستقرار السياسي">Political Instability</div>
+        <div class="critique-h" data-en="Polarization of Societies" data-ar="استقطاب المجتمعات">Polarization of Societies</div>
+        <p class="critique-p" data-en="In Egypt, Tunisia, Libya, and Jordan, Brotherhood participation has often deepened societal polarization between Islamists and secularists, undermining fragile national unity. Their electoral mobilization has at times provoked authoritarian backlash that set back democratic transition for all political actors." data-ar="في مصر وتونس وليبيا والأردن، كثيراً ما أسهم وجود الجماعة في تعميق الاستقطاب بين الإسلاميين والعلمانيين، مقوّضاً الوحدة الوطنية الهشة. دفع حشدها الانتخابي في أحيان كثيرة إلى ردود فعل استبدادية أخّرت التحول الديمقراطي لجميع الفاعلين السياسيين.">In Egypt, Tunisia, Libya, and Jordan, Brotherhood participation has often deepened societal polarization between Islamists and secularists, undermining fragile national unity.</p>
+      </div>
+      <div class="critique-card">
+        <div class="critique-num">03</div>
+        <div class="critique-label" data-en="Ideological Ambiguity" data-ar="الغموض الأيديولوجي">Ideological Ambiguity</div>
+        <div class="critique-h" data-en="The Violence Question" data-ar="مسألة العنف">The Violence Question</div>
+        <p class="critique-p" data-en="While the Brotherhood officially renounced violence, its intellectual output — especially Sayyid Qutb's writings — provided ideological scaffolding later used by groups like al-Qaeda and ISIS. The gap between official non-violence and radicalized splinter movements remains a persistent credibility challenge." data-ar="رغم تخلّي الجماعة رسمياً عن العنف، وفّر إنتاجها الفكري — ولا سيما كتابات سيد قطب — أرضيةً أيديولوجيةً استند إليها لاحقاً تنظيمان كتنظيم القاعدة وداعش. لا تزال الهوّة بين اللاعنف الرسمي وحركات الانشقاق المتطرفة تطرح تحديات مصداقية مستمرة.">While the Brotherhood officially renounced violence, its intellectual output — especially Sayyid Qutb's writings — provided ideological scaffolding later used by groups like al-Qaeda and ISIS.</p>
+      </div>
+      <div class="critique-card">
+        <div class="critique-num">04</div>
+        <div class="critique-label" data-en="Economic Governance" data-ar="الحوكمة الاقتصادية">Economic Governance</div>
+        <div class="critique-h" data-en="Governance Failures in Power" data-ar="إخفاقات الحوكمة في السلطة">Governance Failures in Power</div>
+        <p class="critique-p" data-en="During Morsi's single year in power in Egypt (2012–13), GDP growth slowed, foreign reserves fell sharply, and fuel shortages worsened. Critics argue the Brotherhood lacked the technical administrative capacity to translate its social movement strengths into effective state governance." data-ar="في عام مرسي الوحيد بالسلطة (2012–2013) تباطأ نمو الناتج المحلي وانهارت الاحتياطيات الأجنبية واشتدّت أزمة الوقود. يرى المنتقدون أن الجماعة افتقرت إلى الكفاءة الإدارية التقنية اللازمة لترجمة قوتها كحركة اجتماعية إلى حوكمة دولة فاعلة.">During Morsi's single year in power (2012–13), GDP growth slowed, foreign reserves fell sharply, and fuel shortages worsened. The Brotherhood lacked administrative capacity to govern effectively.</p>
+      </div>
+      <div class="critique-card">
+        <div class="critique-num">05</div>
+        <div class="critique-label" data-en="Regional Security" data-ar="الأمن الإقليمي">Regional Security</div>
+        <div class="critique-h" data-en="Transnational Network Concerns" data-ar="مخاوف الشبكة العابرة للحدود">Transnational Network Concerns</div>
+        <p class="critique-p" data-en="Saudi Arabia, UAE, and Egypt point to the Brotherhood's transnational funding networks and cross-border political coordination as threats to regional sovereignty. The movement's ability to operate as a coordinated international bloc — channeling finance, media, and political messaging — alarmed Gulf monarchies especially after 2011." data-ar="تُشير السعودية والإمارات ومصر إلى شبكات تمويل الجماعة عبر الحدود وتنسيقها السياسي الدولي باعتبارهما تهديدين للسيادة الإقليمية. أثارت قدرة الحركة على العمل ككتلة دولية منسقة — تتدفق من خلالها الأموال والإعلام والرسائل السياسية — مخاوف ملكيات الخليج لا سيما بعد 2011.">Saudi Arabia, UAE, and Egypt point to the Brotherhood's transnational funding networks and cross-border political coordination as threats to regional sovereignty, alarming Gulf monarchies especially after 2011.</p>
+      </div>
+      <div class="critique-card">
+        <div class="critique-num">06</div>
+        <div class="critique-label" data-en="Gender &amp; Civil Liberties" data-ar="حقوق المرأة والحريات المدنية">Gender &amp; Civil Liberties</div>
+        <div class="critique-h" data-en="Conservative Social Agenda" data-ar="الأجندة الاجتماعية المحافظة">Conservative Social Agenda</div>
+        <p class="critique-p" data-en="The Brotherhood's social conservatism — particularly on women's rights, religious minorities, and freedom of expression — has drawn sustained criticism from liberal and feminist movements across the Arab world. In power, Brotherhood-aligned governments have sought to institutionalize restrictive social policies through constitutional or legislative means." data-ar="يواجه المحافظةُ الاجتماعية للجماعة — ولا سيما ما يتعلق بحقوق المرأة والأقليات الدينية وحرية التعبير — انتقاداً متواصلاً من الحركات الليبرالية والنسوية في أرجاء العالم العربي. حاولت الحكومات المحسوبة على الجماعة عند توليها السلطة تقنين سياسات اجتماعية تقييدية عبر الوسائل الدستورية والتشريعية.">The Brotherhood's social conservatism — particularly on women's rights, religious minorities, and freedom of expression — has drawn criticism from liberal movements. In power, restrictive social policies were sought through constitutional means.</p>
+      </div>
     </div>
 
-    <div class="footer">
-        <h3>Connect with Eng. Bader</h3>
-        <div class="social-links">
-            <a href="https://www.instagram.com/b37rm" target="_blank" class="social-link">
-                📷 Instagram: @b37rm
-            </a>
-        </div>
+    <!-- REVOLUTION BANNER -->
+    <div class="revolution-banner">
+      <div class="rev-label" data-en="⚠ Revolutionary Ideology" data-ar="⚠ الأيديولوجيا الثورية">⚠ Revolutionary Ideology</div>
+      <div class="rev-title" data-en="The Brotherhood &amp; the Call for Revolution (ثورة)" data-ar="الجماعة والدعوة إلى الثورة (ثورة)">The Brotherhood &amp; the Call for Revolution (ثورة)</div>
+      <p class="rev-text" data-en="The Brotherhood's relationship with revolutionary change is complex and contested. Officially committed to gradual, non-violent transformation, the group has nonetheless inspired and in some cases facilitated revolutionary movements. Sayyid Qutb's writings explicitly framed existing Muslim governments as illegitimate 'jahiliyya' — a theological position that later served as justification for revolutionary violence by splinter groups. During the Arab Spring, Brotherhood networks were among the most organized forces channeling popular frustration into structured political opposition. Critics in Egypt and the Gulf argue this represents a systematic strategy to destabilize secular governments by exploiting mass grievances, mobilizing street movements, and then positioning the Brotherhood as the 'safe' Islamist alternative — a form of controlled revolution that serves the organization's long-term goal of Islamist state-building." data-ar="تتّسم علاقة الجماعة بالتغيير الثوري بالتعقيد والجدل. مع التزامها الرسمي بالتحول التدريجي اللاعنفي، ألهمت الجماعة حركات ثورية وأسهمت في تيسيرها في بعض الأحيان. صاغت كتابات سيد قطب الحكوماتِ الإسلاميةَ القائمة بوصفها 'جاهلية' غير شرعية — وهو موقف لاهوتي وظّفته لاحقاً حركات انشقاقية لتبرير العنف الثوري. إبان الربيع العربي، كانت شبكات الجماعة من أكثر القوى تنظيماً في تحويل الإحباط الشعبي إلى معارضة سياسية منظمة. يرى المنتقدون في مصر والخليج أن ذلك يمثّل استراتيجية ممنهجة لزعزعة استقرار الحكومات العلمانية، عبر استغلال المظالم الجماهيرية وتحريك حركات الشارع ثم تقديم الجماعة بوصفها البديل الإسلامي 'الآمن' — ثورةٌ مضبوطة تخدم هدفها البعيد في بناء الدولة الإسلامية.">The Brotherhood's relationship with revolutionary change is complex and contested. Officially committed to gradual, non-violent transformation, the group has nonetheless inspired and in some cases facilitated revolutionary movements. Sayyid Qutb's writings explicitly framed existing Muslim governments as illegitimate 'jahiliyya' — a theological position that later served as justification for revolutionary violence by splinter groups. During the Arab Spring, Brotherhood networks were among the most organized forces channeling popular frustration into structured political opposition. Critics in Egypt and the Gulf argue this represents a systematic strategy to destabilize secular governments by exploiting mass grievances, mobilizing street movements, and then positioning the Brotherhood as the 'safe' Islamist alternative.</p>
     </div>
 
-    <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
+    <!-- COUNTRY IMPACT -->
+    <div style="margin-top:2px;">
+      <div class="country-impact-grid">
+        <div class="country-card"><div class="country-flag">🇪🇬</div><div class="country-name" data-en="Egypt" data-ar="مصر">Egypt</div><span class="country-badge badge-high" data-en="High Impact" data-ar="تأثير عالٍ">High Impact</span><div class="country-impact" data-en="One-year Morsi presidency ended in military coup. Thousands imprisoned; Brotherhood designated terrorist organization in 2013. Economy destabilized during transition." data-ar="انتهت رئاسة مرسي الوحيدة بانقلاب عسكري. سُجن الآلاف وصنّفت الجماعة إرهابية عام 2013. زعزع الانتقال استقرار الاقتصاد.">One-year Morsi presidency ended in military coup. Thousands imprisoned; designated terrorist organization in 2013.</div></div>
+        <div class="country-card"><div class="country-flag">🇸🇾</div><div class="country-name" data-en="Syria" data-ar="سوريا">Syria</div><span class="country-badge badge-high" data-en="High Impact" data-ar="تأثير عالٍ">High Impact</span><div class="country-impact" data-en="Syrian Brotherhood participated in armed uprising against Assad. Its involvement deepened the civil war's sectarian dimension and complicated Western support for the opposition." data-ar="اشترك الإخوان السوريون في الانتفاضة المسلحة ضد الأسد. أسهم تدخّلهم في تعميق البعد الطائفي للحرب الأهلية وعقّد الدعم الغربي للمعارضة.">Syrian Brotherhood participated in the armed uprising, deepening sectarian conflict and complicating the peace process.</div></div>
+        <div class="country-card"><div class="country-flag">🇯🇴</div><div class="country-name" data-en="Jordan" data-ar="الأردن">Jordan</div><span class="country-badge badge-med" data-en="Moderate Impact" data-ar="تأثير متوسط">Moderate Impact</span><div class="country-impact" data-en="Islamic Action Front (IAF) repeatedly boycotted elections, weakening parliamentary legitimacy. The movement's mass protests put persistent pressure on the Hashemite monarchy." data-ar="قاطعت جبهة العمل الإسلامي الانتخابات مراراً مقوّضةً شرعية البرلمان. مارست احتجاجاتها الجماهيرية ضغطاً متواصلاً على الملكية الهاشمية.">The Islamic Action Front's repeated election boycotts weakened parliamentary legitimacy and put persistent pressure on the monarchy.</div></div>
+        <div class="country-card"><div class="country-flag">🇹🇳</div><div class="country-name" data-en="Tunisia" data-ar="تونس">Tunisia</div><span class="country-badge badge-med" data-en="Moderate Impact" data-ar="تأثير متوسط">Moderate Impact</span><div class="country-impact" data-en="Ennahda's governance (2011–14) was criticized for enabling radical Salafist groups and failing to address economic decline. President Saied's 2021 power grab was partly justified as a response to Islamist dysfunction." data-ar="تعرّضت حوكمة النهضة (2011–2014) لانتقادات بسبب تمكينها الجماعات السلفية المتطرفة وإخفاقها في معالجة التراجع الاقتصادي. استند قيس سعيّد جزئياً في انقلابه عام 2021 إلى خطاب مواجهة الإخفاق الإسلامي.">Ennahda's governance was criticized for enabling radical Salafists and economic mismanagement, contributing to Saied's 2021 power consolidation.</div></div>
+        <div class="country-card"><div class="country-flag">🇱🇾</div><div class="country-name" data-en="Libya" data-ar="ليبيا">Libya</div><span class="country-badge badge-high" data-en="High Impact" data-ar="تأثير عالٍ">High Impact</span><div class="country-impact" data-en="Brotherhood-affiliated militias and parties contributed to Libya's post-Gaddafi fragmentation, aligning with the Tripoli-based government in the ongoing civil war against Haftar's forces." data-ar="أسهمت الميليشيات والأحزاب المنتسبة للجماعة في تشرذم ليبيا ما بعد القذافي، ملتحقةً بحكومة طرابلس في الحرب الأهلية ضد قوات حفتر.">Brotherhood-affiliated militias contributed to Libya's post-Gaddafi fragmentation and ongoing civil conflict.</div></div>
+        <div class="country-card"><div class="country-flag">🇰🇼</div><div class="country-name" data-en="Kuwait" data-ar="الكويت">Kuwait</div><span class="country-badge badge-med" data-en="Moderate Impact" data-ar="تأثير متوسط">Moderate Impact</span><div class="country-impact" data-en="The Islamic Constitutional Movement has repeatedly used parliamentary obstruction to block liberal reforms, creating legislative gridlock that has slowed economic diversification." data-ar="وظّفت حركة الدستور الإسلامي التعطيل البرلماني مراراً لمنع الإصلاحات الليبرالية، مُوجِدةً شللاً تشريعياً أبطأ مسيرة التنويع الاقتصادي.">The Islamic Constitutional Movement has used parliamentary obstruction to block liberal reforms, creating legislative gridlock.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
 
-        function selectSchedule(scheduleId) {
-            const prefix = scheduleId.substring(0, 2);
-            document.querySelectorAll(`[id^='${prefix}-']`).forEach(el => {
-                if (el.classList.contains('schedule-content')) {
-                    el.classList.remove('active');
-                }
-            });
-            document.getElementById(scheduleId).classList.add('active');
-            document.querySelectorAll(`[onclick^="selectSchedule('${prefix}"]`).forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-        }
+<!-- MEMBERS -->
+<div class="members-shell" id="members">
+  <div class="section-shell" style="padding-top:0;padding-bottom:0;">
+    <div class="section-eyebrow fade-up" data-en="Biographical Archive" data-ar="الأرشيف التعريفي">Biographical Archive</div>
+    <h2 class="section-h fade-up" data-en="Notable Members &amp; Leaders" data-ar="أبرز الأعضاء والقادة">Notable Members &amp; Leaders</h2>
+    <p class="section-intro fade-up" data-en="Profiles of the founders, Supreme Guides, scholars, and influential figures who shaped the Brotherhood's ideology, structure, and global reach." data-ar="ملفات تعريفية للمؤسسين والمرشدين العامين والعلماء الذين شكّلوا أيديولوجية الجماعة وهيكلها وامتدادها العالمي.">Profiles of the founders, Supreme Guides, scholars, and influential figures who shaped the Brotherhood's ideology, structure, and global reach.</p>
+    <div class="search-wrap fade-up">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="Search members..." data-placeholder-en="Search members..." data-placeholder-ar="ابحث عن الأعضاء...">
+    </div>
+    <div class="filter-bar fade-up">
+      <button class="filter-btn active" data-filter="all" data-en="All" data-ar="الكل">All</button>
+      <button class="filter-btn" data-filter="founder" data-en="Founders" data-ar="المؤسسون">Founders</button>
+      <button class="filter-btn" data-filter="guide" data-en="Supreme Guides" data-ar="المرشدون العامون">Supreme Guides</button>
+      <button class="filter-btn" data-filter="scholar" data-en="Scholars" data-ar="العلماء">Scholars</button>
+      <button class="filter-btn" data-filter="political" data-en="Political" data-ar="السياسيون">Political</button>
+    </div>
+    <div class="members-grid" id="membersGrid">
 
-        function calculateBMR(gender, weight, height, age) {
-            if (gender === 'male') {
-                return 10 * weight + 6.25 * height - 5 * age + 5;
-            } else {
-                return 10 * weight + 6.25 * height - 5 * age - 161;
-            }
-        }
+      <div class="member-card fade-up" data-category="founder" data-name-en="Hassan al-Banna" data-name-ar="حسن البنا" onclick="openModal('banna')">
+        <div class="card-strip"></div>
+        <div class="card-inner">
+          <div class="card-era" data-en="Founder · 1920s–40s" data-ar="المؤسس · العشرينيات–الأربعينيات">Founder · 1920s–40s</div>
+          <div class="card-name-main" data-en="Hassan al-Banna" data-ar="حسن البنا">Hassan al-Banna</div>
+          <div class="card-name-alt" data-en="حسن البنا" data-ar="Hassan al-Banna">حسن البنا</div>
+          <div class="card-role-pill" data-en="Founder & 1st Supreme Guide" data-ar="المؤسس والمرشد العام الأول">Founder & 1st Supreme Guide</div>
+          <div class="card-dates" data-en="October 14, 1906 — February 12, 1949" data-ar="14 أكتوبر 1906 — 12 فبراير 1949">October 14, 1906 — February 12, 1949</div>
+          <p class="card-bio" data-en="A schoolteacher and Islamic reformer who founded the Brotherhood at 22 with six workers. His organizational genius built one of the Arab world's most powerful grassroots movements." data-ar="معلم مدرسة ومصلح إسلامي أسّس الجماعة وهو في الثانية والعشرين مع ستة عمال. حوّلت عبقريته التنظيمية فكرته إلى إحدى أقوى الحركات الشعبية في العالم العربي.">A schoolteacher and Islamic reformer who founded the Brotherhood at 22 with six workers. His organizational genius built one of the Arab world's most powerful grassroots movements.</p>
+          <div class="card-tags"><span class="tag" data-en="Founder" data-ar="مؤسس">Founder</span><span class="tag" data-en="Egypt" data-ar="مصر">Egypt</span><span class="tag" data-en="Reformist" data-ar="إصلاحي">Reformist</span></div>
+        </div>
+        <div class="card-cta"><span data-en="View Profile" data-ar="عرض الملف">View Profile</span><div class="card-cta-line"></div></div>
+      </div>
 
-        function calculateMassGain(event) {
-            event.preventDefault();
-            const gender = document.querySelector('input[name="mg-gender"]:checked').value;
-            const age = parseInt(document.getElementById('mg-age').value);
-            const weight = parseFloat(document.getElementById('mg-weight').value);
-            const height = parseFloat(document.getElementById('mg-height').value);
-            const activity = parseFloat(document.getElementById('mg-activity').value);
+      <div class="member-card fade-up" data-category="scholar" data-name-en="Sayyid Qutb" data-name-ar="سيد قطب" onclick="openModal('qutb')">
+        <div class="card-strip" style="background:linear-gradient(90deg,#4a1010,var(--gold))"></div>
+        <div class="card-inner">
+          <div class="card-era" data-en="Scholar · 1950s–60s" data-ar="عالم · الخمسينيات–الستينيات">Scholar · 1950s–60s</div>
+          <div class="card-name-main" data-en="Sayyid Qutb" data-ar="سيد قطب">Sayyid Qutb</div>
+          <div class="card-name-alt" data-en="سيد قطب" data-ar="Sayyid Qutb">سيد قطب</div>
+          <div class="card-role-pill" data-en="Chief Ideologue" data-ar="المنظّر الأيديولوجي الرئيسي">Chief Ideologue</div>
+          <div class="card-dates" data-en="October 9, 1906 — August 29, 1966" data-ar="9 أكتوبر 1906 — 29 أغسطس 1966">October 9, 1906 — August 29, 1966</div>
+          <p class="card-bio" data-en="The Brotherhood's most consequential intellectual. His prison writings, especially 'Milestones,' shaped generations of Islamist thought and remain among the most debated texts in modern Islam." data-ar="أكثر مثقفي الجماعة أثراً. شكّلت كتاباته السجنية، ولا سيما 'معالم في الطريق'، أجيالاً من الفكر الإسلامي وتبقى من أكثر النصوص جدلاً في الإسلام الحديث.">The Brotherhood's most consequential intellectual. His prison writings, especially 'Milestones,' shaped generations of Islamist thought globally.</p>
+          <div class="card-tags"><span class="tag" data-en="Ideologue" data-ar="منظّر">Ideologue</span><span class="tag" data-en="Author" data-ar="مؤلف">Author</span><span class="tag" data-en="Executed" data-ar="أُعدم">Executed</span></div>
+        </div>
+        <div class="card-cta"><span data-en="View Profile" data-ar="عرض الملف">View Profile</span><div class="card-cta-line"></div></div>
+      </div>
 
-            const bmr = calculateBMR(gender, weight, height, age);
-            const tdee = bmr * activity;
-            const dailyCalories = Math.round(tdee + 400);
-            const proteinGrams = Math.round(weight * 2);
-            const fatGrams = Math.round(weight * 1);
-            const carbGrams = Math.round((dailyCalories - proteinGrams * 4 - fatGrams * 9) / 4);
+      <div class="member-card fade-up" data-category="guide" data-name-en="Hassan al-Hudaybi" data-name-ar="حسن الهضيبي" onclick="openModal('hudaybi')">
+        <div class="card-strip" style="background:linear-gradient(90deg,var(--mid-green),var(--gold))"></div>
+        <div class="card-inner">
+          <div class="card-era" data-en="2nd Supreme Guide · 1950s–70s" data-ar="المرشد العام الثاني · الخمسينيات–السبعينيات">2nd Supreme Guide · 1950s–70s</div>
+          <div class="card-name-main" data-en="Hassan al-Hudaybi" data-ar="حسن الهضيبي">Hassan al-Hudaybi</div>
+          <div class="card-name-alt" data-en="حسن الهضيبي" data-ar="Hassan al-Hudaybi">حسن الهضيبي</div>
+          <div class="card-role-pill" data-en="2nd Supreme Guide" data-ar="المرشد العام الثاني">2nd Supreme Guide</div>
+          <div class="card-dates" data-en="1891 — November 12, 1973" data-ar="1891 — 12 نوفمبر 1973">1891 — November 12, 1973</div>
+          <p class="card-bio" data-en="A former judge who led the Brotherhood through Nasser's harshest crackdown. His 'Preachers, Not Judges' authored from prison became the Brotherhood's counter to Qutb's radicalism." data-ar="قاضٍ سابق قاد الجماعة خلال أشد حملات ناصر قسوةً. أصبح كتابه 'دعاة لا قضاة' الذي ألّفه من السجن ردّ الجماعة على تطرف قطب.">A former judge who led the Brotherhood through Nasser's harshest crackdown. 'Preachers, Not Judges' countered Qutb's radicalism from within the movement.</p>
+          <div class="card-tags"><span class="tag" data-en="Supreme Guide" data-ar="مرشد عام">Supreme Guide</span><span class="tag" data-en="Moderate" data-ar="معتدل">Moderate</span></div>
+        </div>
+        <div class="card-cta"><span data-en="View Profile" data-ar="عرض الملف">View Profile</span><div class="card-cta-line"></div></div>
+      </div>
 
-            document.getElementById('mg-calories').textContent = dailyCalories;
-            document.getElementById('mg-protein').textContent = proteinGrams;
-            document.getElementById('mg-carbs').textContent = carbGrams;
-            document.getElementById('mg-fat').textContent = fatGrams;
-            document.getElementById('mg-results').classList.add('show');
-        }
+      <div class="member-card fade-up" data-category="scholar" data-name-en="Yusuf al-Qaradawi" data-name-ar="يوسف القرضاوي" onclick="openModal('qaradawi')">
+        <div class="card-strip" style="background:linear-gradient(90deg,var(--mid-green),var(--gold))"></div>
+        <div class="card-inner">
+          <div class="card-era" data-en="Scholar · 1960s–2022" data-ar="عالم · الستينيات–2022">Scholar · 1960s–2022</div>
+          <div class="card-name-main" data-en="Yusuf al-Qaradawi" data-ar="يوسف القرضاوي">Yusuf al-Qaradawi</div>
+          <div class="card-name-alt" data-en="يوسف القرضاوي" data-ar="Yusuf al-Qaradawi">يوسف القرضاوي</div>
+          <div class="card-role-pill" data-en="Global Spiritual Authority" data-ar="المرجعية الدينية العالمية">Global Spiritual Authority</div>
+          <div class="card-dates" data-en="September 9, 1926 — September 26, 2022" data-ar="9 سبتمبر 1926 — 26 سبتمبر 2022">September 9, 1926 — September 26, 2022</div>
+          <p class="card-bio" data-en="One of the most influential Sunni scholars of the 20th century, with a global platform on Al Jazeera reaching 60 million weekly viewers at peak — an unparalleled pulpit for Islamist thought." data-ar="واحد من أبرز علماء السنة في القرن العشرين، امتلك منبراً عالمياً على الجزيرة وصل 60 مليون مشاهد أسبوعياً في ذروته — منبر لا مثيل له للفكر الإسلامي.">One of the most influential Sunni scholars of the 20th century. His Al Jazeera platform reached 60 million weekly viewers — an unparalleled pulpit for Islamist thought.</p>
+          <div class="card-tags"><span class="tag" data-en="Scholar" data-ar="عالم">Scholar</span><span class="tag" data-en="Qatar" data-ar="قطر">Qatar</span><span class="tag" data-en="Media" data-ar="إعلام">Media</span></div>
+        </div>
+        <div class="card-cta"><span data-en="View Profile" data-ar="عرض الملف">View Profile</span><div class="card-cta-line"></div></div>
+      </div>
 
-        function calculateWeightLoss(event) {
-            event.preventDefault();
-            const gender = document.querySelector('input[name="wl-gender"]:checked').value;
-            const age = parseInt(document.getElementById('wl-age').value);
-            const weight = parseFloat(document.getElementById('wl-weight').value);
-            const height = parseFloat(document.getElementById('wl-height').value);
-            const activity = parseFloat(document.getElementById('wl-activity').value);
-            const pace = document.querySelector('input[name="wl-pace"]:checked').value;
+      <div class="member-card fade-up" data-category="political" data-name-en="Mohamed Morsi" data-name-ar="محمد مرسي" onclick="openModal('morsi')">
+        <div class="card-strip" style="background:linear-gradient(90deg,#1a1a2e,var(--gold))"></div>
+        <div class="card-inner">
+          <div class="card-era" data-en="Political · 2000s–2010s" data-ar="سياسي · الألفينيات–العشرينيات">Political · 2000s–2010s</div>
+          <div class="card-name-main" data-en="Mohamed Morsi" data-ar="محمد مرسي">Mohamed Morsi</div>
+          <div class="card-name-alt" data-en="محمد مرسي" data-ar="Mohamed Morsi">محمد مرسي</div>
+          <div class="card-role-pill" data-en="President of Egypt (2012–13)" data-ar="رئيس مصر (2012–2013)">President of Egypt (2012–13)</div>
+          <div class="card-dates" data-en="August 20, 1951 — June 17, 2019" data-ar="20 أغسطس 1951 — 17 يونيو 2019">August 20, 1951 — June 17, 2019</div>
+          <p class="card-bio" data-en="Egypt's first and only democratically elected Brotherhood president. His single year in office ended in a military coup and his death in custody in 2019 made him a symbol of the Brotherhood's unresolved relationship with state power." data-ar="أول وآخر رئيس من الإخوان فاز بانتخابات ديمقراطية في مصر. أنهى عامه الوحيد في منصبه انقلابٌ عسكري، وجعلت وفاته في الاحتجاز عام 2019 منه رمزاً لعلاقة الجماعة المعلّقة بسلطة الدولة.">Egypt's first democratically elected Brotherhood president. One year in office, ended in military coup. Died in custody 2019 — a symbol of the Brotherhood's troubled relationship with state power.</p>
+          <div class="card-tags"><span class="tag" data-en="President" data-ar="رئيس">President</span><span class="tag" data-en="Arab Spring" data-ar="ربيع عربي">Arab Spring</span></div>
+        </div>
+        <div class="card-cta"><span data-en="View Profile" data-ar="عرض الملف">View Profile</span><div class="card-cta-line"></div></div>
+      </div>
 
-            const bmr = calculateBMR(gender, weight, height, age);
-            const tdee = bmr * activity;
-            const deficit = pace === 'slow' ? 250 : pace === 'fast' ? 1000 : 500;
-            const weeklyTarget = pace === 'slow' ? 0.25 : pace === 'fast' ? 1 : 0.5;
-            const dailyCalories = Math.round(tdee - deficit);
-            const proteinGrams = Math.round(weight * 2.2);
-            const fatGrams = Math.round(weight * 0.8);
-            const carbGrams = Math.round((dailyCalories - proteinGrams * 4 - fatGrams * 9) / 4);
+      <div class="member-card fade-up" data-category="guide" data-name-en="Omar al-Tilmisani" data-name-ar="عمر التلمساني" onclick="openModal('tilmisani')">
+        <div class="card-strip"></div>
+        <div class="card-inner">
+          <div class="card-era" data-en="3rd Supreme Guide · 1970s–80s" data-ar="المرشد العام الثالث · السبعينيات–الثمانينيات">3rd Supreme Guide · 1970s–80s</div>
+          <div class="card-name-main" data-en="Omar al-Tilmisani" data-ar="عمر التلمساني">Omar al-Tilmisani</div>
+          <div class="card-name-alt" data-en="عمر التلمساني" data-ar="Omar al-Tilmisani">عمر التلمساني</div>
+          <div class="card-role-pill" data-en="3rd Supreme Guide" data-ar="المرشد العام الثالث">3rd Supreme Guide</div>
+          <div class="card-dates" data-en="1904 — May 22, 1986" data-ar="1904 — 22 مايو 1986">1904 — May 22, 1986</div>
+          <p class="card-bio" data-en="Architect of the Brotherhood's post-Nasser revival. Under his pragmatic leadership the Brotherhood renounced violence, rejoined civil society, and began participating in elections for the first time." data-ar="مهندس نهضة الجماعة بعد ناصر. في عهده القيادي البراغماتي، تخلّت الجماعة عن العنف وعادت إلى المجتمع المدني وبدأت لأول مرة المشاركة في الانتخابات.">Architect of the Brotherhood's post-Nasser revival. Established non-violence as a firm principle and reintegrated the movement into Egyptian civil and political life.</p>
+          <div class="card-tags"><span class="tag" data-en="Supreme Guide" data-ar="مرشد عام">Supreme Guide</span><span class="tag" data-en="Revival" data-ar="إحياء">Revival</span></div>
+        </div>
+        <div class="card-cta"><span data-en="View Profile" data-ar="عرض الملف">View Profile</span><div class="card-cta-line"></div></div>
+      </div>
 
-            document.getElementById('wl-calories').textContent = dailyCalories;
-            document.getElementById('wl-protein').textContent = proteinGrams;
-            document.getElementById('wl-carbs').textContent = carbGrams;
-            document.getElementById('wl-fat').textContent = fatGrams;
-            document.getElementById('wl-deficit').textContent = '-' + deficit;
-            document.getElementById('wl-weekly').textContent = weeklyTarget;
-            document.getElementById('wl-results').classList.add('show');
-        }
-    </script>
+      <div class="member-card fade-up" data-category="guide" data-name-en="Mahdi Akef" data-name-ar="مهدي عاكف" onclick="openModal('akef')">
+        <div class="card-strip" style="background:linear-gradient(90deg,var(--mid-green),#e6b35a)"></div>
+        <div class="card-inner">
+          <div class="card-era" data-en="7th Supreme Guide · 2004–2010" data-ar="المرشد العام السابع · 2004–2010">7th Supreme Guide · 2004–2010</div>
+          <div class="card-name-main" data-en="Mahdi Akef" data-ar="مهدي عاكف">Mahdi Akef</div>
+          <div class="card-name-alt" data-en="مهدي عاكف" data-ar="Mahdi Akef">مهدي عاكف</div>
+          <div class="card-role-pill" data-en="7th Supreme Guide" data-ar="المرشد العام السابع">7th Supreme Guide</div>
+          <div class="card-dates" data-en="July 12, 1928 — September 22, 2017" data-ar="12 يوليو 1928 — 22 سبتمبر 2017">July 12, 1928 — September 22, 2017</div>
+          <p class="card-bio" data-en="Oversaw the Brotherhood's peak electoral performance — 88 seats in 2005 as independents. First Supreme Guide to voluntarily step down, establishing a precedent of term limits." data-ar="أشرف على ذروة الأداء الانتخابي للجماعة — 88 مقعداً عام 2005 بوصفهم مستقلين. أول مرشد عام يتنحى طوعاً مرسياً سابقة لمبدأ محدودية الولاية.">Oversaw the Brotherhood's peak electoral result — 88 seats in 2005. First Supreme Guide to voluntarily step down, establishing a term-limit precedent.</p>
+          <div class="card-tags"><span class="tag" data-en="Supreme Guide" data-ar="مرشد عام">Supreme Guide</span><span class="tag" data-en="2005 Elections" data-ar="انتخابات 2005">2005 Elections</span></div>
+        </div>
+        <div class="card-cta"><span data-en="View Profile" data-ar="عرض الملف">View Profile</span><div class="card-cta-line"></div></div>
+      </div>
+
+      <div class="member-card fade-up" data-category="political" data-name-en="Khairat al-Shater" data-name-ar="خيرت الشاطر" onclick="openModal('shater')">
+        <div class="card-strip" style="background:linear-gradient(90deg,#0a0a0a,var(--gold))"></div>
+        <div class="card-inner">
+          <div class="card-era" data-en="Strategist · born 1950" data-ar="استراتيجي · مواليد 1950">Strategist · born 1950</div>
+          <div class="card-name-main" data-en="Khairat al-Shater" data-ar="خيرت الشاطر">Khairat al-Shater</div>
+          <div class="card-name-alt" data-en="خيرت الشاطر" data-ar="Khairat al-Shater">خيرت الشاطر</div>
+          <div class="card-role-pill" data-en="Deputy Supreme Guide" data-ar="نائب المرشد العام">Deputy Supreme Guide</div>
+          <div class="card-dates" data-en="Born 1950 — currently imprisoned" data-ar="مواليد 1950 — محتجز حالياً">Born 1950 — currently imprisoned</div>
+          <p class="card-bio" data-en="The Brotherhood's most powerful behind-the-scenes operative and chief financier. Built a business empire funding Brotherhood social programs; imprisoned since 2013 after the military coup." data-ar="أبرز الشخصيات خلف الكواليس في الجماعة وممولّها الرئيسي. بنى إمبراطورية تجارية تموّل برامج الجماعة الاجتماعية؛ محتجز منذ انقلاب 2013.">The Brotherhood's most powerful behind-the-scenes operative and chief financier. Built a business empire funding Brotherhood programs. Imprisoned since the 2013 coup.</p>
+          <div class="card-tags"><span class="tag" data-en="Strategist" data-ar="استراتيجي">Strategist</span><span class="tag" data-en="Imprisoned" data-ar="معتقل">Imprisoned</span></div>
+        </div>
+        <div class="card-cta"><span data-en="View Profile" data-ar="عرض الملف">View Profile</span><div class="card-cta-line"></div></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- LEGACY -->
+<div class="legacy-shell" id="legacy">
+  <div class="section-shell" style="padding-top:0;padding-bottom:0;">
+    <div class="section-eyebrow" data-en="Legacy" data-ar="الإرث">Legacy</div>
+    <h2 class="section-h" data-en="Global Influence &amp; Affiliated Movements" data-ar="التأثير العالمي والحركات المنبثقة">Global Influence &amp; Affiliated Movements</h2>
+    <p class="section-intro" data-en="The Brotherhood's organizational model, ideology, and networks have spawned affiliated movements across dozens of countries, each adapting to its own national context." data-ar="أفرز نموذج الجماعة التنظيمي وأيديولوجيتها وشبكاتها حركاتٍ تابعةً في عشرات الدول، يكيّف كلٌّ منها نفسه وفق سياقه الوطني.">The Brotherhood's organizational model, ideology, and networks have spawned affiliated movements across dozens of countries.</p>
+    <div class="legacy-grid">
+      <div class="legacy-item"><div class="legacy-country" data-en="Jordan" data-ar="الأردن">Jordan</div><div class="legacy-org" data-en="Islamic Action Front" data-ar="جبهة العمل الإسلامي">Islamic Action Front</div></div>
+      <div class="legacy-item"><div class="legacy-country" data-en="Palestine" data-ar="فلسطين">Palestine</div><div class="legacy-org" data-en="Hamas" data-ar="حركة حماس">Hamas</div></div>
+      <div class="legacy-item"><div class="legacy-country" data-en="Tunisia" data-ar="تونس">Tunisia</div><div class="legacy-org" data-en="Ennahda Movement" data-ar="حركة النهضة">Ennahda Movement</div></div>
+      <div class="legacy-item"><div class="legacy-country" data-en="Morocco" data-ar="المغرب">Morocco</div><div class="legacy-org" data-en="Justice &amp; Development Party" data-ar="حزب العدالة والتنمية">Justice &amp; Development Party</div></div>
+      <div class="legacy-item"><div class="legacy-country" data-en="Kuwait" data-ar="الكويت">Kuwait</div><div class="legacy-org" data-en="Islamic Constitutional Movement" data-ar="حركة الدستور الإسلامي">Islamic Constitutional Movement</div></div>
+      <div class="legacy-item"><div class="legacy-country" data-en="Libya" data-ar="ليبيا">Libya</div><div class="legacy-org" data-en="Justice &amp; Construction Party" data-ar="حزب العدالة والبناء">Justice &amp; Construction Party</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">الإخوان المسلمون</div>
+  <p data-en="Historical archive for scholarly and research purposes." data-ar="أرشيف تاريخي للأغراض الأكاديمية والبحثية.">Historical archive for scholarly and research purposes.</p>
+  <p style="margin-top:6px;" data-en="Content presented objectively based on historical record." data-ar="يُقدَّم المحتوى بموضوعية استناداً إلى السجل التاريخي.">Content presented objectively based on historical record.</p>
+</footer>
+
+</div><!-- end mainApp -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-head" id="modalHead"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ── LOGIN ──
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') attemptLogin(); });
+document.getElementById('loginUser').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('loginPass').focus(); });
+
+function attemptLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  const err = document.getElementById('loginError');
+  if (u === 'Bader' && p === 'BaderAlmutairi') {
+    err.classList.remove('show');
+    const ls = document.getElementById('loginScreen');
+    ls.classList.add('login-exit');
+    setTimeout(() => {
+      ls.style.display = 'none';
+      const app = document.getElementById('mainApp');
+      app.style.display = 'block';
+      requestAnimationFrame(() => { app.classList.add('show'); });
+    }, 800);
+  } else {
+    err.classList.add('show');
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
+    const card = document.querySelector('.login-form-wrap');
+    card.style.animation = 'none';
+    card.offsetHeight;
+    card.style.animation = 'shake 0.4s ease';
+  }
+}
+
+function logout() {
+  const app = document.getElementById('mainApp');
+  app.classList.remove('show');
+  setTimeout(() => {
+    app.style.display = 'none';
+    const ls = document.getElementById('loginScreen');
+    ls.style.display = 'flex';
+    ls.classList.remove('login-exit');
+    ls.style.opacity = '1';
+    document.getElementById('loginUser').value = '';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('loginUser').focus();
+  }, 400);
+}
+
+// Shake animation
+const shakeStyle = document.createElement('style');
+shakeStyle.textContent = '@keyframes shake{0%,100%{transform:translateX(0);}20%{transform:translateX(-8px);}40%{transform:translateX(8px);}60%{transform:translateX(-4px);}80%{transform:translateX(4px);}}';
+document.head.appendChild(shakeStyle);
+
+// ── LANGUAGE ──
+let currentLang = 'en';
+function setLang(lang) {
+  currentLang = lang;
+  const isAr = lang === 'ar';
+  const root = document.getElementById('htmlRoot');
+  root.setAttribute('lang', lang);
+  root.setAttribute('dir', isAr ? 'rtl' : 'ltr');
+  document.getElementById('btnEn').classList.toggle('active', !isAr);
+  document.getElementById('btnAr').classList.toggle('active', isAr);
+  document.querySelectorAll('[data-en]').forEach(el => { el.textContent = el.getAttribute('data-' + lang); });
+  const inp = document.getElementById('searchInput');
+  inp.placeholder = inp.getAttribute('data-placeholder-' + lang);
+  document.querySelectorAll('.member-card').forEach(card => {
+    const nm = card.querySelector('.card-name-main');
+    const alt = card.querySelector('.card-name-alt');
+    if (nm) nm.textContent = card.getAttribute('data-name-' + lang);
+    if (alt) alt.textContent = card.getAttribute('data-name-' + (isAr ? 'en' : 'ar'));
+  });
+}
+
+// ── MEMBER DATA ──
+const members = {
+  banna: {
+    en: { era:'Founder · 1906–1949', name:'Hassan al-Banna', alt:'حسن البنا', role:'Founder & 1st Supreme Guide', born:'October 14, 1906 — Mahmoudiyya, Egypt', died:'February 12, 1949 — Cairo, Egypt', nat:'Egyptian', period:'1928–1949', bl:'Born', dl:'Died', nl:'Nationality', pl:'Active Period', bh:'Biography', ch:'Key Contributions',
+      bio:`Hassan al-Banna was an Egyptian schoolteacher and political activist who founded the Muslim Brotherhood in March 1928 in Ismailia. Born to a watchmaker and Islamic scholar, he became deeply influenced by reformist Islamic thought from an early age.\n\nHis founding vision was that Islam provided a complete code of life and that the Muslim world needed to return to its roots to confront Western colonialism. His organizational genius turned a small youth club into a mass movement with over 500,000 active members by the 1940s.`,
+      contributions:['Founded the Muslim Brotherhood on March 22, 1928','Built the organization\'s model of schools, clinics, and social welfare networks','Established the principle of gradual Islamization through education','Created a hierarchical organizational structure copied worldwide','Expanded Brotherhood presence to Palestine, Syria, and Sudan','Authored extensively on Islamic revival, politics, and reform']
+    },
+    ar: { era:'المؤسس · 1906–1949', name:'حسن البنا', alt:'Hassan al-Banna', role:'المؤسس والمرشد العام الأول', born:'14 أكتوبر 1906 — المحمودية، مصر', died:'12 فبراير 1949 — القاهرة، مصر', nat:'مصري', period:'1928–1949', bl:'المولد', dl:'الوفاة', nl:'الجنسية', pl:'فترة النشاط', bh:'السيرة الذاتية', ch:'أبرز الإسهامات',
+      bio:`حسن البنا معلم مدرسة وناشط سياسي مصري أسّس جماعة الإخوان المسلمين في مارس 1928 بالإسماعيلية. وُلد لأب ساعاتي وعالم إسلامي، فتشرّب منذ صغره الفكر الإصلاحي الإسلامي.\n\nانطلقت رؤيته التأسيسية من إيمانه بأن الإسلام منهجٌ حياتيٌّ شامل وأن العالم الإسلامي بحاجة إلى العودة إلى جذوره لمواجهة تحديات الاستعمار الغربي. حوّل عبقريته التنظيمية نادياً شبابياً صغيراً إلى حركة جماهيرية تجاوز أعضاؤها النشطون 500,000 عضو بحلول الأربعينيات.`,
+      contributions:['تأسيس جماعة الإخوان المسلمين في 22 مارس 1928','بناء نموذج المدارس والعيادات وشبكة الرعاية الاجتماعية للجماعة','ترسيخ مبدأ الأسلمة التدريجية عبر التعليم','إنشاء هيكل تنظيمي هرمي استنسخته حركات حول العالم','توسيع حضور الجماعة إلى فلسطين وسوريا والسودان','التأليف الغزير في الإحياء الإسلامي والسياسة والإصلاح']
+    }
+  },
+  qutb: {
+    en: { era:'Scholar & Ideologue · 1906–1966', name:'Sayyid Qutb', alt:'سيد قطب', role:'Chief Ideologue', born:'October 9, 1906 — Musha, Asyut, Egypt', died:'August 29, 1966 — Cairo, Egypt (executed)', nat:'Egyptian', period:'1950s–1966', bl:'Born', dl:'Died', nl:'Nationality', pl:'Active Period', bh:'Biography', ch:'Key Contributions',
+      bio:`Sayyid Qutb was a literary critic and Islamic theorist who became the Brotherhood's most influential and controversial intellectual. Initially a secular writer and education official, he became increasingly devout after a visit to the United States (1948–50), which he found morally degenerate.\n\nAfter joining the Brotherhood he was imprisoned following the 1954 crackdown. From prison he wrote his most radical works. He was convicted of conspiracy against the state and executed by hanging in 1966. His ideas continue to shape Islamist movements globally.`,
+      contributions:['Authored "In the Shade of the Quran," a 30-volume Quranic commentary','Wrote "Milestones" — a foundational text for modern political Islam','Developed the "jahiliyya" concept applied to contemporary Muslim societies','His ideas directly influenced al-Qaeda, ISIS, and other militant groups','Critiqued Arab nationalism and secularism from an Islamic theological standpoint']
+    },
+    ar: { era:'عالم ومنظّر · 1906–1966', name:'سيد قطب', alt:'Sayyid Qutb', role:'المنظّر الأيديولوجي الرئيسي', born:'9 أكتوبر 1906 — موشا، أسيوط، مصر', died:'29 أغسطس 1966 — القاهرة، مصر (إعدام)', nat:'مصري', period:'الخمسينيات–1966', bl:'المولد', dl:'الوفاة', nl:'الجنسية', pl:'فترة النشاط', bh:'السيرة الذاتية', ch:'أبرز الإسهامات',
+      bio:`سيد قطب ناقد أدبي ومنظّر إسلامي غدا أبرز مثقفي الجماعة وأكثرهم إثارةً للجدل. كان في بادئ أمره كاتباً علمانياً ومسؤولاً في وزارة التربية، قبل أن تتعمق تديّنه إثر زيارته للولايات المتحدة (1948–50) التي وجدها منحلّةً أخلاقياً.\n\nبعد انضمامه إلى الجماعة سُجن في أعقاب حملة 1954. من داخل زنزانته كتب أكثر أعماله تشدداً. أُدين بالتآمر على الدولة وأُعدم شنقاً عام 1966. لا تزال أفكاره تشكّل الحركات الإسلامية في شتى أنحاء العالم.`,
+      contributions:['تأليف "في ظلال القرآن"، تفسير قرآني في 30 مجلداً','كتابة "معالم في الطريق" — نص تأسيسي للإسلام السياسي الحديث','تطوير مفهوم "الجاهلية" وتطبيقه على المجتمعات الإسلامية المعاصرة','أثّرت أفكاره مباشرةً في تنظيم القاعدة وداعش وجماعات مسلحة أخرى','نقد القومية العربية والعلمانية من منظور لاهوتي إسلامي']
+    }
+  },
+  hudaybi: {
+    en: { era:'2nd Supreme Guide · 1891–1973', name:'Hassan al-Hudaybi', alt:'حسن الهضيبي', role:'2nd Supreme Guide (1951–1973)', born:'1891 — Egypt', died:'November 12, 1973 — Egypt', nat:'Egyptian', period:'1951–1973', bl:'Born', dl:'Died', nl:'Nationality', pl:'Active Period', bh:'Biography', ch:'Key Contributions',
+      bio:`Hassan al-Hudaybi was an Egyptian jurist and the second Supreme Guide of the Muslim Brotherhood, succeeding al-Banna after his assassination. A former judge at the Court of Cassation, he was known for his measured temperament.\n\nHis leadership was defined by the challenge of navigating the Brotherhood through Nasser's brutal crackdown. From prison he authored "Preachers, Not Judges," which explicitly rejected Qutb's radical concepts and reaffirmed the Brotherhood's non-violent, gradualist approach.`,
+      contributions:['Preserved organizational integrity through Nasser\'s crackdowns','Authored "Preachers, Not Judges" — a landmark ideological moderation','Explicitly rejected takfir as a legitimate organizational tool','Maintained the Brotherhood\'s commitment to non-violence','Led the organization through its most difficult repression']
+    },
+    ar: { era:'المرشد العام الثاني · 1891–1973', name:'حسن الهضيبي', alt:'Hassan al-Hudaybi', role:'المرشد العام الثاني (1951–1973)', born:'1891 — مصر', died:'12 نوفمبر 1973 — مصر', nat:'مصري', period:'1951–1973', bl:'المولد', dl:'الوفاة', nl:'الجنسية', pl:'فترة النشاط', bh:'السيرة الذاتية', ch:'أبرز الإسهامات',
+      bio:`حسن الهضيبي فقيه مصري وثاني المرشدين العامين لجماعة الإخوان المسلمين، خلف البنا عقب اغتياله. كان قاضياً سابقاً في محكمة النقض، اشتُهر بهدوئه ورجاحة عقله.\n\nتجلّت قيادته في توجيه الجماعة عبر حملة القمع الناصرية الشرسة. من داخل السجن ألّف "دعاة لا قضاة"، الذي رفض صراحةً مفاهيم قطب المتشددة وأعاد تأكيد النهج اللاعنفي التدريجي للجماعة.`,
+      contributions:['صون التماسك التنظيمي إبان حملات القمع الناصرية','تأليف "دعاة لا قضاة" — تعديل أيديولوجي بارز','رفض التكفير صراحةً بوصفه أداةً تنظيمية مشروعة','الحفاظ على التزام الجماعة باللاعنف','قيادة التنظيم في أشد مراحل القمع قسوةً']
+    }
+  },
+  qaradawi: {
+    en: { era:'Scholar · 1926–2022', name:'Yusuf al-Qaradawi', alt:'يوسف القرضاوي', role:'Global Spiritual Authority', born:'September 9, 1926 — Saft Turab, Egypt', died:'September 26, 2022 — Doha, Qatar', nat:'Egyptian-Qatari', period:'1960s–2022', bl:'Born', dl:'Died', nl:'Nationality', pl:'Active Period', bh:'Biography', ch:'Key Contributions',
+      bio:`Yusuf al-Qaradawi was one of the most prominent Sunni scholars of the 20th and 21st centuries. A Brotherhood member since the 1940s, he left Egypt for Qatar after Nasser's crackdown and built an extraordinary global platform.\n\nHe founded the European Council for Fatwa and Research and the International Union of Muslim Scholars. His Al Jazeera program "Sharia and Life" was watched by an estimated 60 million viewers weekly. His fatwas were considered authoritative by millions.`,
+      contributions:['Authored over 120 books on Islamic law, jurisprudence, and ethics','Founded the European Council for Fatwa and Research','Chaired the International Union of Muslim Scholars','Hosted "Sharia and Life" on Al Jazeera for 17+ years','Promoted fiqh al-wasatiyya (jurisprudence of moderation)','Developed Islamic finance principles adopted by banks worldwide']
+    },
+    ar: { era:'عالم · 1926–2022', name:'يوسف القرضاوي', alt:'Yusuf al-Qaradawi', role:'المرجعية الدينية العالمية', born:'9 سبتمبر 1926 — صفط تراب، مصر', died:'26 سبتمبر 2022 — الدوحة، قطر', nat:'مصري قطري', period:'الستينيات–2022', bl:'المولد', dl:'الوفاة', nl:'الجنسية', pl:'فترة النشاط', bh:'السيرة الذاتية', ch:'أبرز الإسهامات',
+      bio:`يوسف القرضاوي من أبرز علماء أهل السنة وأكثرهم تأثيراً في القرنين العشرين والحادي والعشرين. انتسب إلى الجماعة منذ الأربعينيات وغادر مصر إلى قطر عقب حملة القمع الناصرية حيث بنى منصباً عالمياً استثنائياً.\n\nأسّس المجلس الأوروبي للإفتاء والبحوث والاتحاد العالمي لعلماء المسلمين. كان برنامجه على الجزيرة "الشريعة والحياة" يتابعه نحو 60 مليون مشاهد أسبوعياً. اعتُبرت فتاواه مرجعاً لدى الملايين.`,
+      contributions:['تأليف أكثر من 120 كتاباً في الفقه الإسلامي والأخلاق','تأسيس المجلس الأوروبي للإفتاء والبحوث','رئاسة الاتحاد العالمي لعلماء المسلمين','استضافة "الشريعة والحياة" على الجزيرة لأكثر من 17 عاماً','تعزيز مفهوم فقه الوسطية','وضع أسس التمويل الإسلامي المعتمدة في البنوك حول العالم']
+    }
+  },
+  morsi: {
+    en: { era:'Political Leader · 1951–2019', name:'Mohamed Morsi', alt:'محمد مرسي', role:'President of Egypt (2012–2013)', born:'August 20, 1951 — Adwa, Sharqia, Egypt', died:'June 17, 2019 — Cairo (in custody)', nat:'Egyptian', period:'2000–2013', bl:'Born', dl:'Died', nl:'Nationality', pl:'Active Period', bh:'Biography', ch:'Key Contributions',
+      bio:`Mohamed Morsi was an Egyptian engineer and politician who became Egypt's first and only democratically elected Brotherhood president in June 2012. He held a doctorate from USC and was a professor of engineering.\n\nElected following the Arab Spring revolution, his presidency was marked by a controversial 2012 constitutional declaration placing him above judicial review. He was removed in a military coup on July 3, 2013 and died during a court session in 2019 — making him a lasting symbol of the Brotherhood's tragic relationship with state power.`,
+      contributions:['First democratically elected civilian president of Egypt','Led the Freedom and Justice Party to parliamentary majority','Brokered Israel-Hamas Gaza ceasefire (November 2012)','Oversaw drafting of Egypt\'s 2012 constitution','His presidency and death in custody became globally symbolic']
+    },
+    ar: { era:'قائد سياسي · 1951–2019', name:'محمد مرسي', alt:'Mohamed Morsi', role:'رئيس مصر (2012–2013)', born:'20 أغسطس 1951 — العدوة، الشرقية، مصر', died:'17 يونيو 2019 — القاهرة (في الاحتجاز)', nat:'مصري', period:'2000–2013', bl:'المولد', dl:'الوفاة', nl:'الجنسية', pl:'فترة النشاط', bh:'السيرة الذاتية', ch:'أبرز الإسهامات',
+      bio:`محمد مرسي مهندس وسياسي مصري أصبح أول وآخر رئيس من الإخوان منتخب ديمقراطياً في مصر في يونيو 2012. حاصل على الدكتوراه من جامعة جنوب كاليفورنيا وكان أستاذاً للهندسة.\n\nانتُخب إثر ثورة الربيع العربي، واتّسمت رئاسته بالجدل إثر إعلانه الدستوري المثير لعام 2012 الذي وضعه فوق الرقابة القضائية. أُطيح به في انقلاب عسكري في 3 يوليو 2013 وتوفي خلال جلسة محاكمة عام 2019، ليغدو رمزاً دائماً للعلاقة المأساوية بين الجماعة وسلطة الدولة.`,
+      contributions:['أول رئيس مدني منتخب ديمقراطياً في مصر','قيادة حزب الحرية والعدالة إلى الأغلبية البرلمانية','التوسط لإبرام هدنة غزة بين إسرائيل وحماس (نوفمبر 2012)','الإشراف على صياغة دستور مصر 2012','باتت رئاسته ووفاته في الاحتجاز رمزاً عالمياً']
+    }
+  },
+  tilmisani: {
+    en: { era:'3rd Supreme Guide · 1904–1986', name:'Omar al-Tilmisani', alt:'عمر التلمساني', role:'3rd Supreme Guide (1973–1986)', born:'1904 — Cairo, Egypt', died:'May 22, 1986 — Cairo, Egypt', nat:'Egyptian', period:'1973–1986', bl:'Born', dl:'Died', nl:'Nationality', pl:'Active Period', bh:'Biography', ch:'Key Contributions',
+      bio:`Omar al-Tilmisani was an Egyptian lawyer and the third Supreme Guide, leading the Brotherhood during its post-Nasser revival under Sadat and early Mubarak.\n\nUnder his pragmatic leadership the Brotherhood officially renounced violence and pursued political engagement through legal channels, working with professional unions and student associations. He oversaw the Brotherhood's return to public life and relaunch of its newspaper.`,
+      contributions:['Revived the Brotherhood after years of Nasserist suppression','Established non-violence as a firm organizational principle','Reintegrated into Egyptian civil society through professional syndicates','Oversaw first steps into electoral politics','Rebuilt organizational infrastructure after years of repression']
+    },
+    ar: { era:'المرشد العام الثالث · 1904–1986', name:'عمر التلمساني', alt:'Omar al-Tilmisani', role:'المرشد العام الثالث (1973–1986)', born:'1904 — القاهرة، مصر', died:'22 مايو 1986 — القاهرة، مصر', nat:'مصري', period:'1973–1986', bl:'المولد', dl:'الوفاة', nl:'الجنسية', pl:'فترة النشاط', bh:'السيرة الذاتية', ch:'أبرز الإسهامات',
+      bio:`عمر التلمساني محامٍ مصري وثالث المرشدين العامين، قاد الجماعة إبان نهضتها بعد الناصرية في عهدي السادات ومبارك المبكر.\n\nتحت قيادته البراغماتية، تخلّت الجماعة رسمياً عن العنف وانتهجت المشاركة السياسية عبر القنوات القانونية، بالتعاون مع النقابات المهنية والاتحادات الطلابية. أشرف على عودة الجماعة إلى الحياة العامة وإعادة إطلاق صحيفتها.`,
+      contributions:['إحياء الجماعة بعد سنوات من القمع الناصري','ترسيخ اللاعنف مبدأً تنظيمياً راسخاً','إعادة الاندماج في المجتمع المدني المصري عبر النقابات','الإشراف على الخطوات الأولى في السياسة الانتخابية','إعادة بناء البنية التحتية التنظيمية بعد سنوات القمع']
+    }
+  },
+  akef: {
+    en: { era:'7th Supreme Guide · 1928–2017', name:'Mahdi Akef', alt:'مهدي عاكف', role:'7th Supreme Guide (2004–2010)', born:'July 12, 1928 — Minya, Egypt', died:'September 22, 2017 — Egypt', nat:'Egyptian', period:'2004–2010', bl:'Born', dl:'Died', nl:'Nationality', pl:'Active Period', bh:'Biography', ch:'Key Contributions',
+      bio:`Mohamed Mahdi Akef served as the seventh Supreme Guide of the Brotherhood. A veteran from the 1940s, he was imprisoned multiple times under Nasser, Sadat, and Mubarak.\n\nHis tenure saw the Brotherhood's most successful electoral performance: 88 seats in the 2005 parliamentary elections as independents — the largest opposition bloc. He became the first Supreme Guide to voluntarily step down, in 2010.`,
+      contributions:['Oversaw 88-seat victory in 2005 parliamentary elections','First Supreme Guide to voluntarily step down — establishing precedent','Expanded Brotherhood\'s international outreach and communication','Developed policy positions on democracy and pluralism','Led organization under increasing Mubarak pressure']
+    },
+    ar: { era:'المرشد العام السابع · 1928–2017', name:'مهدي عاكف', alt:'Mahdi Akef', role:'المرشد العام السابع (2004–2010)', born:'12 يوليو 1928 — المنيا، مصر', died:'22 سبتمبر 2017 — مصر', nat:'مصري', period:'2004–2010', bl:'المولد', dl:'الوفاة', nl:'الجنسية', pl:'فترة النشاط', bh:'السيرة الذاتية', ch:'أبرز الإسهامات',
+      bio:`محمد مهدي عاكف تولّى منصب المرشد العام السابع للجماعة. عضوٌ عتيق من أربعينيات القرن الماضي، سُجن مراراً في عهود ناصر والسادات ومبارك.\n\nشهد عهده أبرز إنجاز انتخابي للجماعة: 88 مقعداً في انتخابات 2005 البرلمانية بوصفهم مستقلين — أكبر كتلة معارضة. وأصبح أول مرشد عام يتنحى طوعاً عام 2010.`,
+      contributions:['الإشراف على الفوز بـ 88 مقعداً في انتخابات 2005','أول مرشد عام يتنحى طوعاً مرسياً سابقةً تاريخية','توسيع انفتاح الجماعة الدولي وتعزيز تواصلها','صياغة مواقف سياسية بشأن الديمقراطية والتعددية','قيادة التنظيم تحت وطأة الضغط المتصاعد من مبارك']
+    }
+  },
+  shater: {
+    en: { era:'Strategist · born 1950', name:'Khairat al-Shater', alt:'خيرت الشاطر', role:'Deputy Supreme Guide & Chief Strategist', born:'1950 — Egypt', died:'Currently imprisoned', nat:'Egyptian', period:'1990s–present', bl:'Born', dl:'Status', nl:'Nationality', pl:'Active Period', bh:'Biography', ch:'Key Contributions',
+      bio:`Khairat al-Shater is a wealthy Egyptian businessman and the Deputy Supreme Guide, widely regarded as the organization's most powerful strategist and financier behind the scenes.\n\nInitially the Brotherhood's 2012 presidential nominee before disqualification, he was the chief architect of Morsi's campaign. Arrested after the 2013 coup, sentenced to death in 2015 (later reduced), he remains imprisoned.`,
+      contributions:['Primary financier of Brotherhood social welfare and political programs','Chief architect of the Brotherhood\'s post-2011 political strategy','Brotherhood\'s initial 2012 presidential nominee','Modernized organizational and financial systems','Key figure in international Brotherhood business networks']
+    },
+    ar: { era:'استراتيجي · مواليد 1950', name:'خيرت الشاطر', alt:'Khairat al-Shater', role:'نائب المرشد العام والاستراتيجي الرئيسي', born:'1950 — مصر', died:'محتجز حالياً', nat:'مصري', period:'التسعينيات–حتى الآن', bl:'المولد', dl:'الوضع', nl:'الجنسية', pl:'فترة النشاط', bh:'السيرة الذاتية', ch:'أبرز الإسهامات',
+      bio:`خيرت الشاطر رجل أعمال مصري ثري ونائب المرشد العام، يُنظر إليه على نطاق واسع باعتباره أبرز استراتيجيي الجماعة وممولّيها الرئيسيين خلف الكواليس.\n\nكان في البداية المرشح الرئاسي للجماعة عام 2012 قبل استبعاده، ثم غدا المهندس الرئيسي لحملة مرسي. اعتُقل عقب انقلاب 2013 وصدر بحقه حكم بالإعدام عام 2015 خُفّف لاحقاً، ولا يزال محتجزاً.`,
+      contributions:['الممول الرئيسي لبرامج الرعاية الاجتماعية والسياسية للجماعة','المهندس الرئيسي للاستراتيجية السياسية للجماعة بعد 2011','مرشح الجماعة الرئاسي الأولي عام 2012','تحديث الأنظمة التنظيمية والمالية للجماعة','شخصية محورية في شبكات الأعمال الدولية للجماعة']
+    }
+  }
+};
+
+// ── MODAL ──
+function openModal(id) {
+  const data = members[id];
+  if (!data) return;
+  const m = data[currentLang];
+  const isAr = currentLang === 'ar';
+  document.getElementById('modalHead').innerHTML = `
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-era">${m.era}</div>
+    <div class="modal-name">${m.name}</div>
+    <div class="modal-name-alt" style="${isAr?'direction:ltr;font-family:Inter,sans-serif;':'font-family:Amiri,serif;'}">${m.alt}</div>
+    <span class="modal-role-pill">${m.role}</span>
+  `;
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal-meta">
+      <div class="meta-item"><label>${m.bl}</label><span>${m.born}</span></div>
+      <div class="meta-item"><label>${m.dl}</label><span>${m.died}</span></div>
+      <div class="meta-item"><label>${m.nl}</label><span>${m.nat}</span></div>
+      <div class="meta-item"><label>${m.pl}</label><span>${m.period}</span></div>
+    </div>
+    <div class="modal-section-h">${m.bh}</div>
+    <p class="modal-p">${m.bio.replace(/\n\n/g,'</p><p class="modal-p" style="margin-top:12px;">')}</p>
+    <div class="modal-section-h">${m.ch}</div>
+    <ul class="modal-list">${m.contributions.map(c=>`<li>${c}</li>`).join('')}</ul>
+  `;
+  document.getElementById('modalOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModalDirect(){document.getElementById('modalOverlay').classList.remove('open');document.body.style.overflow='';}
+function closeModal(e){if(e&&e.target!==document.getElementById('modalOverlay'))return;closeModalDirect();}
+
+// ── FILTER ──
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const f=btn.dataset.filter;
+    document.querySelectorAll('.member-card').forEach(c=>c.classList.toggle('hidden',f!=='all'&&c.dataset.category!==f));
+  });
+});
+
+// ── SEARCH ──
+document.getElementById('searchInput').addEventListener('input',function(){
+  const q=this.value.toLowerCase();
+  document.querySelectorAll('.member-card').forEach(c=>{
+    const en=(c.getAttribute('data-name-en')||'').toLowerCase();
+    const ar=c.getAttribute('data-name-ar')||'';
+    c.classList.toggle('hidden',q.length>0&&!en.includes(q)&&!ar.includes(q));
+  });
+});
+
+// ── SCROLL ANIMATIONS ──
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.08});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+// Focus login input
+document.getElementById('loginUser').focus();
+</script>
 </body>
 </html>
